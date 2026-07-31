@@ -1,0 +1,63 @@
+name: Corpus correction
+description: A benchmark with a better source, a wrong attribution, or a definition that misstates common practice.
+labels: ["corpus"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        These are the most valuable issues this project receives. The research is the part that is expensive to reproduce, so a correction with a primary source behind it is worth more than a feature request.
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of correction is this?
+      options:
+        - A benchmark that has a better or more primary source
+        - A figure in the fabrication catalogue that is actually real
+        - A definition that misstates how the metric is used in practice
+        - A benchmark presented without a segment
+        - Something else
+    validations:
+      required: true
+
+  - type: input
+    id: metric
+    attributes:
+      label: Which metric?
+      placeholder: net revenue retention
+    validations:
+      required: true
+
+  - type: textarea
+    id: current
+    attributes:
+      label: What the corpus says now
+      description: Quote it, and name the file in packages/corpus/research/ if you know it.
+    validations:
+      required: true
+
+  - type: textarea
+    id: correction
+    attributes:
+      label: What it should say
+    validations:
+      required: true
+
+  - type: textarea
+    id: source
+    attributes:
+      label: Source
+      description: >
+        Publisher, publication date, and a link. A primary source beats somebody
+        quoting one. A correction without a source cannot be verified and cannot
+        be merged, which is the standard the corpus holds itself to.
+    validations:
+      required: true
+
+  - type: textarea
+    id: segment
+    attributes:
+      label: Which segment does this figure describe?
+      description: >
+        Retention for enterprise and for self-serve are different businesses. If
+        the source names a segment, an ACV band, or a company stage, say so here.

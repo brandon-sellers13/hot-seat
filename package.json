@@ -1,0 +1,32 @@
+{
+  "name": "hot-seat",
+  "private": true,
+  "version": "0.0.0",
+  "description": "A turn-based board meeting where you defend your metrics under questioning.",
+  "license": "Apache-2.0",
+  "author": "Brandon Sellers",
+  "homepage": "https://github.com/brandon-sellers13/hot-seat",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brandon-sellers13/hot-seat.git"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "vitest": "^3.2.4"
+  }
+}

@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Connecting my own data source
+    url: https://github.com/brandon-sellers13/hot-seat/blob/main/docs/YOUR-DATA.md
+    about: >
+      There are no connectors for Salesforce, Stripe, Snowflake or anything else,
+      and there will not be. Fill the published JSON contract in your fork instead.
+      This guide shows three ways people actually do it.
+  - name: Running your own instance
+    url: https://github.com/brandon-sellers13/hot-seat/blob/main/docs/SELF-HOSTING.md
+    about: A literal checklist, from fork to deployed, in about forty minutes.

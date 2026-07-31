@@ -1,0 +1,52 @@
+name: Bug report
+description: Something in the game or the self-hosting path does not work.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before filing: if sign-in fails at the last step on your own instance, it is almost always the authorised redirect address in your Google OAuth client. It has to match your Supabase callback exactly, and a trailing slash counts as not matching. Step 4 of [SELF-HOSTING.md](https://github.com/brandon-sellers13/hot-seat/blob/main/docs/SELF-HOSTING.md) covers it.
+
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where did this happen?
+      options:
+        - The hosted game
+        - My own deployment
+        - Running locally
+    validations:
+      required: true
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Opened the Daily
+        2. Typed an answer to the second question
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: errors
+    attributes:
+      label: Any error messages or console output
+      description: >
+        Please check that you have not pasted an API key or a service role key.
+        If you have one to share privately, do not put it here.
+      render: shell
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and device
+      placeholder: Safari on iPhone, Chrome on macOS

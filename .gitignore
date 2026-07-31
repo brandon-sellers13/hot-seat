@@ -1,0 +1,41 @@
+# --- Private to this working copy: never publish ---------------------------
+# Planning artefacts that contain consulting-client context, personal
+# operating notes, or infrastructure identifiers. The active plan in
+# docs/plans/ is published deliberately; these are not.
+docs/ideation/
+docs/brainstorms/
+docs/setup-checklist.md
+tasks/
+
+# Your own company figures. The whole point of the data contract is that this
+# file lives in your fork and never travels. See docs/YOUR-DATA.md.
+your-numbers.json
+**/your-numbers.json
+!examples/your-numbers.example.json
+
+# --- Secrets ---------------------------------------------------------------
+.env
+.env.*
+!.env.example
+
+# --- Tooling ---------------------------------------------------------------
+node_modules/
+dist/
+build/
+.svelte-kit/
+.netlify/
+coverage/
+*.tsbuildinfo
+playwright-report/
+test-results/
+
+# Supabase CLI local state
+supabase/.branches/
+supabase/.temp/
+
+# --- OS / editor -----------------------------------------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

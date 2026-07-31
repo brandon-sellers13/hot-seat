@@ -1,0 +1,44 @@
+# Supabase project configuration, kept as code rather than as dashboard clicks.
+#
+# The two auth settings below are OFF in a new Supabase project and the game
+# does not work without them. Shipping them here means a fork inherits working
+# authentication instead of following two instructions it might skip, which is
+# the same reasoning behind enforcing tenant isolation in the database rather
+# than in application code.
+#
+# Apply with:   supabase config push --project-ref <your-project-ref>
+
+project_id = "hot-seat"
+
+[auth]
+# The published address of your deployment. OAuth redirects come back here, so
+# a wrong value here is the usual cause of a sign-in that dead-ends.
+site_url = "env(PUBLIC_SITE_URL)"
+additional_redirect_urls = ["http://127.0.0.1:5173", "http://localhost:5173"]
+
+# Play with no account. This is the front door: a first-time visitor gets a
+# real user row, and therefore real row-level-security protection, before they
+# have decided whether they care enough to sign in.
+enable_anonymous_sign_ins = true
+
+# Required so an anonymous player can later attach a Google account and keep
+# the same user id, which is how a streak survives signing in. Without this,
+# linkIdentity() fails at the exact moment a player tries to keep their
+# progress, which is the worst possible time to discover a missing toggle.
+enable_manual_linking = true
+
+[auth.rate_limit]
+# Supabase's own per-IP ceiling on anonymous sign-ins. This sits underneath the
+# application's session caps and rate limits as a free extra layer, and it is
+# aimed at scripts rather than players.
+anonymous_users = 30
+
+[auth.external.google]
+enabled = true
+client_id = "env(SUPABASE_AUTH_GOOGLE_CLIENT_ID)"
+secret = "env(SUPABASE_AUTH_GOOGLE_SECRET)"
+# Google is the only sign-in method by design. Every alternative adds a support
+# surface for a solo maintainer, in exchange for reaching a marginal slice of
+# users. Scopes stay limited to openid, email and profile, all of which are
+# non-sensitive, which is what keeps the app clear of Google's verification
+# review. Adding a fourth scope is a decision with an annual review attached.

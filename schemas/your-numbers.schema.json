@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/brandon-sellers13/hot-seat/main/schemas/your-numbers.schema.json",
+  "title": "Your Numbers",
+  "description": "The data contract that lets The Hot Seat question you about your own business instead of a generic corpus. Fill this file in your fork. It is never committed to this repository, never sent to the hosted game, and never appears in telemetry.\n\nThis schema deliberately models the SHAPE of a number and not the number itself. You record roughly how big it is, which way it is moving, whether it sits above or below the benchmark, where it came from, and what you are doing about it. That is everything the game needs in order to question you, and it means a leaked copy of this file discloses far less than a spreadsheet would.",
+  "type": "object",
+  "required": ["schema_version", "company", "facts"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "description": "Optional pointer back to this schema. Editors use it to offer autocomplete and inline validation while you type, which is the cheapest way to get the file right first time.",
+      "type": "string"
+    },
+    "schema_version": {
+      "description": "Version of this contract the file was written against. Breaking changes bump the major version and the loader will tell you what moved.",
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "examples": ["1.0.0"]
+    },
+    "company": {
+      "type": "object",
+      "required": ["name", "model", "reporting_cadence"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "description": "What the board calls the company. Used in dialogue so questions sound like they are about your business.",
+          "type": "string",
+          "minLength": 1
+        },
+        "model": {
+          "description": "Which half of the corpus applies. Choosing 'both' means the board may question you on consumer subscription metrics and B2B pipeline metrics in the same session, which is harder and closer to reality for companies running both.",
+          "enum": ["b2b_saas", "consumer_subscription", "both"]
+        },
+        "reporting_cadence": {
+          "description": "How often your numbers are refreshed. This drives the staleness rule: a fact older than one reporting period is retired from questioning rather than asked about, because being drilled on a number you have since replaced trains the wrong answer.",
+          "enum": ["monthly", "quarterly"]
+        }
+      }
+    },
+    "facts": {
+      "description": "One entry per metric you want to be questioned on. Start with five or ten that you would actually be asked about in a real room. A short, current, honest file beats a long stale one.",
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/fact" }
+    }
+  },
+  "$defs": {
+    "fact": {
+      "type": "object",
+      "required": ["metric", "as_of", "magnitude", "direction", "vs_benchmark", "source"],
+      "additionalProperties": false,
+      "properties": {
+        "metric": {
+          "description": "Slug of the metric card this fact attaches to, for example 'net-revenue-retention' or 'cac-payback-period'. Run the validator to see the available slugs; an unrecognised one is reported by name rather than silently ignored.",
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "as_of": {
+          "description": "The date this figure was true, in YYYY-MM-DD form. Required on every fact, with no default, because an undated number is the thing that gets you caught out in a real board meeting.",
+          "type": "string",
+          "format": "date"
+        },
+        "segment": {
+          "description": "Which slice this figure describes, when it matters. Benchmark questions are close to meaningless without one, since retention for enterprise and for self-serve are different businesses.",
+          "type": "string",
+          "examples": ["enterprise", "mid-market", "SMB", "self-serve", "iOS", "all customers"]
+        },
+        "magnitude": {
+          "description": "Roughly how big the number is, written the way you would say it out loud rather than as a precise figure. Bands are the point: they are enough to answer a board question and not enough to reconstruct your accounts.",
+          "type": "string",
+          "minLength": 1,
+          "examples": ["around 105 to 110 percent", "low seven figures", "just under 14 months", "high single digit percent"]
+        },
+        "direction": {
+          "description": "Which way it has moved since the previous reporting period. Boards ask about trajectory more often than level, and 'improving' or 'worsening' is a claim you must be ready to defend.",
+          "enum": ["improving", "flat", "worsening", "unknown"]
+        },
+        "vs_benchmark": {
+          "description": "Where this sits against the segment benchmark in the corpus. Answer 'unknown' honestly if you have never checked; the game will treat that as a gap worth closing rather than pretending you knew.",
+          "enum": ["above", "at", "below", "unknown"]
+        },
+        "source": {
+          "description": "The system of record this comes from, and how often it refreshes. This field is not bookkeeping. The whole board-answer rubric turns on anchoring a number you can source, so a fact without a credible origin cannot be defended, and the game will press you on exactly that.",
+          "type": "string",
+          "minLength": 1,
+          "examples": ["Baremetrics, refreshed monthly", "warehouse model, rebuilt each quarter", "finance close pack"]
+        },
+        "strategy": {
+          "description": "What you would say next, after anchoring the number. List the driver metrics you would point to and what is being done about them. This is the second and higher-scoring half of the board-answer rubric, so a fact with no strategy can only ever earn a partial result no matter how well you recall the figure.",
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "examples": [
+            [
+              "onboarding completion is up nine points since the redesign",
+              "we moved the trial length from 7 to 14 days in April and the cohort is still maturing"
+            ]
+          ]
+        },
+        "note": {
+          "description": "Anything the questioner should know in order to ask a fair question, such as a definitional choice you have made. Use it when your construction of a metric differs from the corpus default.",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "@hot-seat/app",
+  "private": true,
+  "version": "0.0.0",
+  "description": "The SvelteKit front end: reference mode, The Daily, and The Hot Seat.",
+  "type": "module"
+}

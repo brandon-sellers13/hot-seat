@@ -1,0 +1,73 @@
+{
+  "$schema": "../schemas/your-numbers.schema.json",
+  "schema_version": "1.0.0",
+  "company": {
+    "name": "Lantern Labs",
+    "model": "both",
+    "reporting_cadence": "monthly"
+  },
+  "facts": [
+    {
+      "metric": "net-revenue-retention",
+      "as_of": "2026-06-30",
+      "segment": "enterprise",
+      "magnitude": "around 105 to 110 percent",
+      "direction": "improving",
+      "vs_benchmark": "at",
+      "source": "finance close pack, produced monthly",
+      "strategy": [
+        "expansion is coming almost entirely from seat growth rather than upsell to higher tiers, which is why the number is at benchmark rather than above it",
+        "the tier migration programme starts in Q4 and is the main lever we expect to move this"
+      ]
+    },
+    {
+      "metric": "gross-revenue-retention",
+      "as_of": "2026-06-30",
+      "segment": "enterprise",
+      "magnitude": "low nineties percent",
+      "direction": "flat",
+      "vs_benchmark": "below",
+      "source": "finance close pack, produced monthly",
+      "strategy": [
+        "churn is concentrated in accounts that never completed onboarding, so the fix is an activation problem rather than a product gap",
+        "we now track time to first integration as the leading indicator and it has come down from 31 days to 19"
+      ],
+      "note": "We calculate this before any price increases, so it is not directly comparable to vendors who report it after."
+    },
+    {
+      "metric": "cac-payback-period",
+      "as_of": "2026-06-30",
+      "segment": "self-serve",
+      "magnitude": "just under 14 months",
+      "direction": "worsening",
+      "vs_benchmark": "below",
+      "source": "warehouse model, rebuilt each quarter",
+      "strategy": [
+        "the whole deterioration is paid social, where costs rose through the spring while conversion held flat",
+        "we are shifting budget toward the partner channel, which pays back in about half the time on a smaller base"
+      ]
+    },
+    {
+      "metric": "trial-to-paid-conversion",
+      "as_of": "2026-06-30",
+      "segment": "iOS",
+      "magnitude": "high single digit percent",
+      "direction": "improving",
+      "vs_benchmark": "unknown",
+      "source": "RevenueCat, refreshed daily",
+      "strategy": [
+        "the improvement follows the move from a 7 day to a 14 day trial in April, and the later cohorts have not fully matured yet"
+      ],
+      "note": "We have never benchmarked this against a comparable app, which is exactly why vs_benchmark says unknown rather than guessing. Answering 'unknown' honestly is treated as a gap worth closing, not as a wrong answer."
+    },
+    {
+      "metric": "monthly-active-users",
+      "as_of": "2026-05-31",
+      "segment": "all customers",
+      "magnitude": "low six figures",
+      "direction": "flat",
+      "vs_benchmark": "unknown",
+      "source": "product analytics, refreshed daily"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+[build]
+  command = "npm run build"
+  # Produced by the SvelteKit static build in packages/app. Does not exist until
+  # the app shell lands; until then this deploys nothing, which is correct.
+  publish = "packages/app/build"
+
+[build.environment]
+  # Node 20 reached end of life on 30 April 2026 and receives no security
+  # patches. Node 24 is the active LTS line through April 2028.
+  NODE_VERSION = "24"
+
+[functions]
+  # Serverless handlers live in the monorepo package rather than a top-level
+  # netlify/ directory, so they share tooling and types with the rest of the
+  # workspace.
+  directory = "packages/functions/src"
+  node_bundler = "esbuild"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
