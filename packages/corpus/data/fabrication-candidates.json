@@ -1,0 +1,125 @@
+{
+  "candidate_count": 15,
+  "candidates": [
+    {
+      "file": "01-retention-churn.md",
+      "family": "retention-churn",
+      "line": 7,
+      "matched": "fabricated",
+      "excerpt": "**Sourcing note.** Every benchmark below carries its publisher, publication date, and the year of the underlying data. Where I could not verify a figure against a primary source, the field reads NO SOURCED BENCHMARK FOUND. Three widely-circulated numbers were ...",
+      "status": "candidate"
+    },
+    {
+      "file": "02-unit-economics.md",
+      "family": "unit-economics",
+      "line": 5,
+      "matched": "fabricated",
+      "excerpt": "**Research basis:** All benchmarks below were pulled from live sources during this session and are dated. Where I could not verify a segmented benchmark from a credible publisher, the field reads **NO SOURCED BENCHMARK FOUND**. Two research agents independentl...",
+      "status": "candidate"
+    },
+    {
+      "file": "02-unit-economics.md",
+      "family": "unit-economics",
+      "line": 564,
+      "matched": "fabrication",
+      "excerpt": "- **The $8.41 misattribution.** A search-result claim that \"average mobile subscription ARPU is $8.41\" is a misattribution of RevenueCat's Gaming-category month-one realized LTV per payer. This specific fabrication is circulating widely.",
+      "status": "candidate"
+    },
+    {
+      "file": "02-unit-economics.md",
+      "family": "unit-economics",
+      "line": 683,
+      "matched": "fabricated",
+      "excerpt": "**Important caveat verified during research:** although the Business of Apps page is titled 2025 and dated February 2025, the ad-platform charts inside are labeled 2019-2024 with 2024 projections. The per-platform figures are not 2025 data. Also, the widely ci...",
+      "status": "candidate"
+    },
+    {
+      "file": "04-acquisition-paid-media.md",
+      "family": "acquisition-paid-media",
+      "line": 13,
+      "matched": "fabricated",
+      "excerpt": "| **Citations are being fabricated at scale.** | `digitalapplied.com` \"Display Advertising Benchmarks 2026\" attributes GDN CPM $3.12 and CTR 0.46% to \"WordStream Display Industry Benchmarks Q1 2026.\" WordStream's own benchmark hub publishes **only** Search and...",
+      "status": "candidate"
+    },
+    {
+      "file": "04-acquisition-paid-media.md",
+      "family": "acquisition-paid-media",
+      "line": 73,
+      "matched": "fabricated",
+      "excerpt": "**Google Display, LinkedIn, CTV/streaming, Reddit, and Amazon absolute CPMs: NO SOURCED BENCHMARK FOUND.** Every result traced to unsourced or fabricated-citation SEO content. To fill: register for Tinuiti's and Skai's full quarterly PDFs and Varos's benchmark...",
+      "status": "candidate"
+    },
+    {
+      "file": "04-acquisition-paid-media.md",
+      "family": "acquisition-paid-media",
+      "line": 423,
+      "matched": "fabricated",
+      "excerpt": "Combine with a channel CPC to derive cost per registration. **Caveat this heavily: OpenView shut down in 2024, the data is from mid-2022, and no successor dataset exists.** Claims of \"OpenView 2024 PLG benchmarks\" circulating on aggregator sites could not be v...",
+      "status": "candidate"
+    },
+    {
+      "file": "04-acquisition-paid-media.md",
+      "family": "acquisition-paid-media",
+      "line": 635,
+      "matched": "fabricated",
+      "excerpt": "**Cost per MQL, cost per SQL, cost per opportunity, and review-site (G2/Capterra) CPL: NO SOURCED BENCHMARK FOUND.** Every result claiming these traces to unsourced, AI-generated SEO content with fabricated precision. Derive from your own CPL and stage rates i...",
+      "status": "candidate"
+    },
+    {
+      "file": "04-acquisition-paid-media.md",
+      "family": "acquisition-paid-media",
+      "line": 746,
+      "matched": "misattribution",
+      "excerpt": "A widely-repeated \"B2B SaaS converts at 1.1%, per Ruler Analytics\" could not be verified on any Ruler page; their current report contains no 1.1% and no B2B SaaS row. **Treat it as a misattribution.**",
+      "status": "candidate"
+    },
+    {
+      "file": "04-acquisition-paid-media.md",
+      "family": "acquisition-paid-media",
+      "line": 1759,
+      "matched": "fabricated",
+      "excerpt": "**Three findings I would act on before anything else.** First, the Gordon 2022 result that non-experimental measurement error is *worst at the lower funnel* (median RCT lift 5% versus 24% and 64% from the two observational methods) means the conversions you op...",
+      "status": "candidate"
+    },
+    {
+      "file": "06-consumer-subscription.md",
+      "family": "consumer-subscription",
+      "line": 79,
+      "matched": "fabrication",
+      "excerpt": "That is a 2.6% to 83.9% range, roughly 32x, with zero fabrication at any step. The last row is the one to watch: **excluding people who cancelled during the trial removes the entire population the metric exists to measure.** It converts trial-to-paid into a pa...",
+      "status": "candidate"
+    },
+    {
+      "file": "07-b2b-pipeline-sales.md",
+      "family": "b2b-pipeline-sales",
+      "line": 714,
+      "matched": "misattribution",
+      "excerpt": "- **Mix shift confounds efficiency metrics.** A shift toward outbound raises CAC ratio and lengthens cycles; reading that as \"marketing got worse\" is a common misattribution.",
+      "status": "candidate"
+    },
+    {
+      "file": "08-growth-efficiency.md",
+      "family": "growth-efficiency",
+      "line": 248,
+      "matched": "fabricated",
+      "excerpt": "**Regime flag — this is the most important one in the section.** T2D3 describes the top few percent of outcomes in a capital regime that ended. Against a current median of 22%, a company doing 2x at $20M ARR is in roughly the top decile, not \"behind plan.\" Boa...",
+      "status": "candidate"
+    },
+    {
+      "file": "08-growth-efficiency.md",
+      "family": "growth-efficiency",
+      "line": 869,
+      "matched": "fabrication",
+      "excerpt": "Both are correct for their populations. The gap is roughly 14 points — larger than almost any operating decision you would make. Neither is \"the SaaS benchmark.\" **Pick the source whose sample matches the company, and name it.** This is the most common way ben...",
+      "status": "candidate"
+    },
+    {
+      "file": "08-growth-efficiency.md",
+      "family": "growth-efficiency",
+      "line": 1242,
+      "matched": "fabricated",
+      "excerpt": "| Share of venture-backed SaaS that completes the full T2D3 path | Various | **No sourced figure exists** that I could find. Any percentage quoted for this should be assumed fabricated. |",
+      "status": "candidate"
+    }
+  ]
+}

@@ -3,5 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "description": "The source-verified metrics corpus. Licensed CC BY-SA 4.0, separately from the rest of the repository.",
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "extract": "node src/extract.js"
+  },
+  "main": "data/cards.json"
 }

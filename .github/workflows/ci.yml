@@ -27,7 +27,13 @@ jobs:
       - name: Build
         run: npm run build
 
-      # The corpus is the asset. If a research edit breaks extraction, that
-      # should fail here rather than surface later as a missing card.
-      - name: Corpus extraction stays reproducible
-        run: npm run extract --workspace @hot-seat/corpus --if-present
+      # The corpus is the asset, and the extracted data is committed so that
+      # consumers get it without running a build. Regenerating it here and
+      # failing on any diff is what keeps the committed copy honest: a research
+      # edit that changes the cards must land with its regenerated output, and
+      # a hand-edit of the generated data cannot survive review.
+      - name: Corpus extraction is reproducible from the research
+        run: |
+          npm run extract --workspace @hot-seat/corpus
+          git diff --exit-code -- packages/corpus/data \
+            || { echo "::error::Committed corpus data does not match the research files. Run 'npm run extract --workspace @hot-seat/corpus' and commit the result."; exit 1; }
