@@ -107,13 +107,34 @@ export const checkSessionCap = async (supabase) => {
  * trips: the game says the grader is resting and reference mode keeps working.
  */
 export const checkGlobalCeiling = async () => {
-  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) return { allowed: true, degraded: true }
+  // A MISSING KEY IS NOT A TRANSIENT ERROR, AND MUST NOT FAIL OPEN.
+  //
+  // This ceiling is the only hard guarantee on spend and the documented kill
+  // switch. Without the service-role key it cannot count anything, and an
+  // earlier version returned "allowed" in that case, which meant the control
+  // looked present in the code, read as enforced in the plan, and did nothing
+  // at all. A cap that silently fails open is worse than no cap, because it
+  // stops anyone looking for the real one.
+  //
+  // So a misconfiguration closes the expensive endpoint rather than opening it.
+  // The Daily is uncapped by design and keeps working, as does reference mode,
+  // so the failure is loud without taking the whole product down.
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return {
+      allowed: false,
+      misconfigured: true,
+      reason:
+        'SUPABASE_SERVICE_ROLE_KEY is not set, so the daily session ceiling cannot be enforced. Hot Seat sessions are disabled until it is.'
+    }
+  }
 
   const { count, error } = await adminClient()
     .from('sessions')
     .select('id', { count: 'exact', head: true })
     .gte('started_at', since(DAY))
 
+  // A query failure IS transient, and blocking every player over a momentary
+  // database blip is the wrong trade. The per-user weekly cap still stands.
   if (error) return { allowed: true, degraded: true }
 
   return {

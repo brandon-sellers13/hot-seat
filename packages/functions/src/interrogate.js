@@ -63,6 +63,17 @@ export const handler = async (event) => {
   if (turn === 1 && !bringYourOwn) {
     const ceiling = await checkGlobalCeiling()
     if (!ceiling.allowed) {
+      // A misconfiguration and a tripped ceiling both close this endpoint, but
+      // they are different problems and the operator needs to be able to tell
+      // them apart from the response alone.
+      if (ceiling.misconfigured) {
+        console.error(`[budget] ${ceiling.reason}`)
+        return json(503, {
+          error: 'misconfigured',
+          message:
+            'This deployment is missing its spend guardrail, so sessions are disabled. The Daily and reference mode still work.'
+        })
+      }
       return json(503, {
         error: 'resting',
         message: 'The board has gone home for the day. Reference mode is still open.'
