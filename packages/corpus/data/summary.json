@@ -1,0 +1,31 @@
+{
+  "cards": 213,
+  "narrative": 22,
+  "questions": 1074,
+  "benchmark_present": 81,
+  "benchmark_absent": 132,
+  "by_family": {
+    "retention-churn": 25,
+    "unit-economics": 26,
+    "revenue-quality": 18,
+    "acquisition-paid-media": 37,
+    "engagement-activation": 37,
+    "consumer-subscription": 30,
+    "b2b-pipeline-sales": 35,
+    "growth-efficiency": 18
+  },
+  "by_tier": {
+    "primary": 66,
+    "untagged": 129,
+    "secondary": 14,
+    "weak": 4
+  },
+  "prompt_types": {
+    "definition": 213,
+    "formula": 207,
+    "inputs": 213,
+    "application": 211,
+    "traps": 149,
+    "benchmark": 81
+  }
+}

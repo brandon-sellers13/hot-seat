@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="icon" href="%sveltekit.assets%/icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="%sveltekit.assets%/icons/icon-192.png" />
+    <link rel="manifest" href="%sveltekit.assets%/manifest.webmanifest" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafaf8" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#14130f" />
+    <meta
+      name="description"
+      content="A turn-based board meeting where you defend your metrics under questioning."
+    />
+    <script>
+      // Applied before first paint so a dark-theme user never sees a flash of
+      // the light ground. Reads the saved choice only; the media query in the
+      // stylesheet handles everyone who has not chosen.
+      try {
+        const saved = localStorage.getItem('hot-seat:theme')
+        if (saved === 'dark' || saved === 'light') {
+          document.documentElement.dataset.theme = saved
+        }
+      } catch (_) {
+        // Private browsing can throw on localStorage. The media query covers it.
+      }
+    </script>
+    %sveltekit.head%
+  </head>
+  <body data-sveltekit-preload-data="hover">
+    <div style="display: contents">%sveltekit.body%</div>
+  </body>
+</html>

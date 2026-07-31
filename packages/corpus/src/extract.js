@@ -167,6 +167,31 @@ export const run = () => {
     )}\n`
   )
 
+  // A small summary so the app shell can show real counts without pulling the
+  // 1.2MB card set into its main bundle. Reference mode loads the full file on
+  // demand instead, where the cost is justified.
+  const promptCounts = corpus.cards
+    .flatMap((c) => c.supported_prompt_types)
+    .reduce((acc, t) => ({ ...acc, [t]: (acc[t] ?? 0) + 1 }), {})
+
+  writeFileSync(
+    out('summary.json'),
+    `${JSON.stringify(
+      {
+        cards: corpus.cards.length,
+        narrative: corpus.narrative.length,
+        questions: Object.values(promptCounts).reduce((a, b) => a + b, 0),
+        benchmark_present: corpus.counts.benchmark_present,
+        benchmark_absent: corpus.counts.benchmark_absent,
+        by_family: corpus.counts.by_family,
+        by_tier: corpus.counts.by_tier,
+        prompt_types: promptCounts
+      },
+      null,
+      2
+    )}\n`
+  )
+
   writeFileSync(
     out('fabrication-candidates.json'),
     `${JSON.stringify({ candidate_count: candidates.length, candidates }, null, 2)}\n`

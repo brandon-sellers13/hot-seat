@@ -1,0 +1,142 @@
+/*
+ * Brand tokens, from BrandonSellers.com (css/site.css).
+ *
+ * Light is the port; dark is an extension, since the source site is light-only.
+ * The dark ground is a warm near-black rather than a neutral grey so it reads
+ * as the same brand with the lights off, and the accents are lifted because the
+ * source blue and violet do not carry enough contrast against a dark ground.
+ */
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('/fonts/dm-sans.woff2') format('woff2');
+  font-weight: 100 1000;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/jetbrains-mono.woff2') format('woff2');
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Surfaces */
+  --bg: #fafaf8;
+  --card: #ffffff;
+  --border: #e8e6e1;
+  --raised: #ffffff;
+
+  /* Text */
+  --text: #1a1a1a;
+  --mid: #4a4a4a;
+  --muted: #6a6a6a;
+  --faint: #a0a0a0;
+
+  /* Accent */
+  --accent: #3d63dd;
+  --accent-2: #7c3aed;
+  --gradient: linear-gradient(135deg, #3d63dd, #7c3aed);
+  --accent-shadow: rgba(61, 99, 221, 0.25);
+  --accent-shadow-hover: rgba(61, 99, 221, 0.35);
+  --accent-wash: rgba(61, 99, 221, 0.08);
+
+  /* Semantic */
+  --good: #059669;
+  --warn: #d97706;
+  --bad: #dc2626;
+  --good-wash: rgba(5, 150, 105, 0.1);
+  --warn-wash: rgba(217, 119, 6, 0.1);
+  --bad-wash: rgba(220, 38, 38, 0.1);
+
+  /* Type */
+  --sans: 'DM Sans', 'Helvetica Neue', -apple-system, system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Shape */
+  --radius: 14px;
+  --radius-sm: 8px;
+  --radius-pill: 999px;
+
+  /* Rhythm */
+  --gap-xs: 6px;
+  --gap-sm: 10px;
+  --gap: 16px;
+  --gap-lg: 24px;
+  --gap-xl: 40px;
+
+  --shell: 780px;
+
+  color-scheme: light;
+}
+
+:root[data-theme='dark'],
+:root:not([data-theme='light']) {
+  /* Placeholder so the selector below is not the only dark source. */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #14130f;
+    --card: #1c1b17;
+    --border: #2f2c25;
+    --raised: #232019;
+
+    --text: #f6f4ef;
+    --mid: #c9c4b8;
+    --muted: #9c968a;
+    --faint: #6e685e;
+
+    --accent: #8098f2;
+    --accent-2: #b18cfb;
+    --gradient: linear-gradient(135deg, #6f8bf0, #a274f8);
+    --accent-shadow: rgba(128, 152, 242, 0.22);
+    --accent-shadow-hover: rgba(128, 152, 242, 0.34);
+    --accent-wash: rgba(128, 152, 242, 0.12);
+
+    --good: #34d399;
+    --warn: #fbbf24;
+    --bad: #f87171;
+    --good-wash: rgba(52, 211, 153, 0.12);
+    --warn-wash: rgba(251, 191, 36, 0.12);
+    --bad-wash: rgba(248, 113, 113, 0.12);
+
+    color-scheme: dark;
+  }
+}
+
+/* The explicit toggle has to win in both directions, not just from light. */
+:root[data-theme='dark'] {
+  --bg: #14130f;
+  --card: #1c1b17;
+  --border: #2f2c25;
+  --raised: #232019;
+
+  --text: #f6f4ef;
+  --mid: #c9c4b8;
+  --muted: #9c968a;
+  --faint: #6e685e;
+
+  --accent: #8098f2;
+  --accent-2: #b18cfb;
+  --gradient: linear-gradient(135deg, #6f8bf0, #a274f8);
+  --accent-shadow: rgba(128, 152, 242, 0.22);
+  --accent-shadow-hover: rgba(128, 152, 242, 0.34);
+  --accent-wash: rgba(128, 152, 242, 0.12);
+
+  --good: #34d399;
+  --warn: #fbbf24;
+  --bad: #f87171;
+  --good-wash: rgba(52, 211, 153, 0.12);
+  --warn-wash: rgba(251, 191, 36, 0.12);
+  --bad-wash: rgba(248, 113, 113, 0.12);
+
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}

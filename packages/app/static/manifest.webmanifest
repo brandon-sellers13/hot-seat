@@ -1,0 +1,36 @@
+{
+  "name": "The Hot Seat",
+  "short_name": "Hot Seat",
+  "description": "A turn-based board meeting where you defend your metrics under questioning.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fafaf8",
+  "theme_color": "#3d63dd",
+  "categories": ["education", "productivity"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    {
+      "src": "/icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Today's Daily",
+      "short_name": "Daily",
+      "description": "Five questions, about ninety seconds.",
+      "url": "/daily"
+    },
+    {
+      "name": "Reference",
+      "short_name": "Reference",
+      "description": "Look up any metric. Works offline.",
+      "url": "/reference"
+    }
+  ]
+}
