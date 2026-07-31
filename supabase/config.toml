@@ -33,6 +33,29 @@ enable_manual_linking = true
 # aimed at scripts rather than players.
 anonymous_users = 30
 
+[auth.email]
+# Email and password sign-up is switched OFF, deliberately and explicitly.
+#
+# This block exists because of something learned the hard way on 2026-07-30:
+# `supabase config push` writes the WHOLE auth configuration, not only the parts
+# named in this file. Anything left unspecified is filled in from the CLI's
+# local-development defaults and pushed to the real project. The first push
+# therefore enabled email signup and switched email confirmations off, which
+# would have left the project accepting password accounts with unverified
+# addresses -- an open signup surface on a public deployment, and a flat
+# contradiction of the Google-only decision.
+#
+# The plan's claim that no password hashes exist to leak, because none are ever
+# created, is only true while this stays false. Leaving it unstated is not the
+# same as leaving it off.
+enable_signup = false
+enable_confirmations = true
+max_frequency = "1m0s"
+
+[auth.sms]
+# Same reasoning as above. No phone sign-in, stated rather than assumed.
+enable_signup = false
+
 [auth.external.google]
 enabled = true
 client_id = "env(SUPABASE_AUTH_GOOGLE_CLIENT_ID)"

@@ -16,7 +16,11 @@ export default defineConfig({
             '**/node_modules/**',
             '**/dist/**',
             '**/build/**',
-            '**/.svelte-kit/**'
+            '**/.svelte-kit/**',
+            // The grading gate calls a paid API. It is the evidence behind the
+            // choice of grader, not a check to run on every commit. Run it with
+            // `npm run gate` before changing the model, effort or prompt.
+            '**/grading-gate.test.js'
           ]
         }
       }

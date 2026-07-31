@@ -3,5 +3,8 @@
   "private": true,
   "version": "0.0.0",
   "description": "Netlify serverless handlers. Hold the provider key and enforce the budget controls.",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.109.0"
+  }
 }
