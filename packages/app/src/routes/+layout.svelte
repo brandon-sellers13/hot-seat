@@ -3,6 +3,7 @@
   import { onMount } from 'svelte'
   import { page } from '$app/state'
   import { applyTheme, readTheme } from '$lib/theme.js'
+  import SignIn from '$lib/SignIn.svelte'
 
   let { children } = $props()
 
@@ -72,6 +73,8 @@
         >
       {/each}
     </nav>
+
+    <SignIn />
 
     <!-- The icon shows what you will get, not what you have, which is the
          convention people already expect from this control. -->

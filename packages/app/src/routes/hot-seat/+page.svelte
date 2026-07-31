@@ -4,6 +4,20 @@
   import { loadCards } from '$lib/corpus.js'
   import { accessToken, ensureSession, isConfigured } from '$lib/auth.js'
   import { BOARD, SESSION, pickSessionCards, applyDelta, outcomeCopy } from '$lib/session.js'
+  import Sprite from '$lib/Sprite.svelte'
+  import Typewriter from '$lib/Typewriter.svelte'
+
+  // The mock's sprite keys differ from the seat names used server-side.
+  const SPRITE_FOR = { cfo: 'cfo', product: 'pro', growth: 'gro', ceo: 'ceo' }
+
+  // Expression follows the moment: the model returns a mood per turn, and the
+  // trap gets a hard cut to shock so the beat lands visually as well as in text.
+  const MOOD_FOR = {
+    neutral: 'neutral', stern: 'stern', pleased: 'pleased',
+    shock: 'shock', pressing: 'stern'
+  }
+
+  let lineDone = $state(false)
 
   let phase = $state('intro') // intro | playing | over
   let cards = $state([])
@@ -56,6 +70,7 @@
       })
       turnNo = next
       verdict = null
+      lineDone = false
     } catch (caught) {
       error =
         caught.payload?.message ??
@@ -200,16 +215,37 @@
   {:else if busy && !turn}
     <p class="status">The board is conferring...</p>
   {:else if turn}
-    <article class="speaker card">
+    <!-- One speaker in close-up, the way the format calls for. The other seats
+         are present but dimmed, so the room exists without competing with the
+         person actually talking. -->
+    <div class="stage">
+      <div class="bench" aria-hidden="true">
+        {#each Object.keys(BOARD) as seat (seat)}
+          <span class="seat" class:active={seat === turn.speaker}>
+            <Sprite who={SPRITE_FOR[seat]} mood={seat === turn.speaker ? MOOD_FOR[turn.mood] ?? 'neutral' : 'neutral'} px={seat === turn.speaker ? 5 : 3} />
+          </span>
+        {/each}
+      </div>
+
+      <div class="closeup" class:trap={turn.is_trap}>
+        <Sprite
+          who={SPRITE_FOR[turn.speaker]}
+          mood={MOOD_FOR[turn.mood] ?? 'neutral'}
+          px={9}
+          label={speaker?.name}
+        />
+      </div>
+    </div>
+
+    <article class="dialogue" class:trap={turn.is_trap}>
       <header>
-        <span class="avatar" data-seat={turn.speaker} aria-hidden="true"></span>
-        <span>
-          <strong>{speaker?.name}</strong>
-          <span class="role">{speaker?.role}</span>
-        </span>
+        <strong>{speaker?.name}</strong>
+        <span class="role">{speaker?.role}</span>
       </header>
-      <p class="line">{turn.line}</p>
-      <p class="ask">{turn.question}</p>
+      <Typewriter text={turn.line} onDone={() => (lineDone = true)} />
+      {#if lineDone}
+        <p class="ask">{turn.question}</p>
+      {/if}
     </article>
 
     {#if verdict}
@@ -251,13 +287,18 @@
         </button>
       </section>
     {:else}
-      <AnswerBox
-        question=""
-        threshold={SESSION.hesitationMs}
-        placeholder="Answer them."
-        disabled={busy}
-        onsubmit={answer}
-      />
+      {#if lineDone}
+        <!-- The timer starts when the question appears, not when the turn is
+             requested, so waiting for the board to speak is never counted as
+             the player hesitating. -->
+        <AnswerBox
+          question=""
+          threshold={SESSION.hesitationMs}
+          placeholder="Answer them."
+          disabled={busy}
+          onsubmit={answer}
+        />
+      {/if}
     {/if}
   {/if}
 {/if}
@@ -318,40 +359,80 @@
     margin-left: auto;
   }
 
-  .speaker header {
+  /* The stage: the room, with the speaker pulled forward. */
+  .stage {
+    position: relative;
     display: flex;
-    align-items: center;
-    gap: var(--gap-sm);
-    margin-bottom: var(--gap);
+    align-items: flex-end;
+    justify-content: center;
+    min-height: 172px;
+    margin-bottom: -14px;
   }
-  .speaker .role {
-    display: block;
-    font-size: 0.78rem;
+  .bench {
+    position: absolute;
+    bottom: 6px;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0 var(--gap-xs);
+    opacity: 0.28;
+    filter: grayscale(0.6);
+  }
+  .seat.active {
+    visibility: hidden;
+  }
+  .closeup {
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 6px 0 var(--accent-shadow));
+  }
+  .closeup.trap {
+    animation: jolt 0.34s steps(3, end) 1;
+  }
+  @keyframes jolt {
+    0% { transform: translateX(0); }
+    30% { transform: translateX(-5px); }
+    60% { transform: translateX(5px); }
+    100% { transform: translateX(0); }
+  }
+
+  /* The dialogue box, sitting under the speaker the way the format wants. */
+  .dialogue {
+    position: relative;
+    background: var(--card);
+    border: 2px solid var(--text);
+    border-radius: var(--radius);
+    padding: var(--gap);
+    box-shadow: 4px 4px 0 var(--text);
+  }
+  .dialogue.trap {
+    border-color: var(--bad);
+    box-shadow: 4px 4px 0 var(--bad);
+  }
+  .dialogue header {
+    display: flex;
+    align-items: baseline;
+    gap: var(--gap-sm);
+    margin-bottom: var(--gap-xs);
+    flex-wrap: wrap;
+  }
+  .dialogue .role {
+    font-size: 0.72rem;
     color: var(--muted);
   }
-  .avatar {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    background: var(--gradient);
-  }
-  .avatar[data-seat='product'] {
-    background: linear-gradient(135deg, var(--good), var(--accent));
-  }
-  .avatar[data-seat='growth'] {
-    background: linear-gradient(135deg, var(--warn), var(--bad));
-  }
-  .avatar[data-seat='ceo'] {
-    background: linear-gradient(135deg, var(--muted), var(--faint));
-  }
-  .line {
+  .dialogue :global(.line) {
     color: var(--mid);
     margin-bottom: var(--gap-sm);
   }
   .ask {
-    font-size: 1.1rem;
+    font-size: 1.08rem;
     line-height: 1.5;
+    font-weight: 500;
+    margin-top: var(--gap-sm);
+    padding-top: var(--gap-sm);
+    border-top: 1px dashed var(--border);
   }
 
   .reveal {

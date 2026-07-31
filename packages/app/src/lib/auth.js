@@ -1,6 +1,11 @@
 import { createClient } from '@supabase/supabase-js'
 import { browser } from '$app/environment'
-import { env } from '$env/dynamic/public'
+// Static, not dynamic. $env/dynamic/public is resolved by a server at runtime,
+// and this is a fully prerendered site with no server, so the values came back
+// empty and isConfigured() silently returned false: no sign-in button, and no
+// way for the app to authenticate at all. Static inlines them at build time,
+// which is the only thing that works for a static adapter.
+import { PUBLIC_SUPABASE_ANON_KEY, PUBLIC_SUPABASE_URL } from '$env/static/public'
 
 /**
  * Identity.
@@ -22,8 +27,8 @@ let client = null
 export const supabase = () => {
   if (!browser) return null
   if (!client) {
-    if (!env.PUBLIC_SUPABASE_URL || !env.PUBLIC_SUPABASE_ANON_KEY) return null
-    client = createClient(env.PUBLIC_SUPABASE_URL, env.PUBLIC_SUPABASE_ANON_KEY, {
+    if (!PUBLIC_SUPABASE_URL || !PUBLIC_SUPABASE_ANON_KEY) return null
+    client = createClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
       auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
     })
   }
