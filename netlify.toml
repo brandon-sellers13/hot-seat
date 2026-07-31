@@ -9,6 +9,13 @@
   # patches. Node 24 is the active LTS line through April 2028.
   NODE_VERSION = "24"
 
+  # NODE_VERSION above governs the BUILD only. The serverless runtime is a
+  # separate setting, and leaving it unset silently ran the functions on Node 20
+  # even with the line above present. Found in production: the Supabase client
+  # needs a native WebSocket, which Node gained in 22, so every grading call
+  # returned a 502.
+  AWS_LAMBDA_JS_RUNTIME = "nodejs22.x"
+
 [functions]
   # Serverless handlers live in the monorepo package rather than a top-level
   # netlify/ directory, so they share tooling and types with the rest of the
