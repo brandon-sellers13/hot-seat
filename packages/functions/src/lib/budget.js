@@ -51,11 +51,31 @@ export const userClient = (accessToken) =>
     auth: { persistSession: false, autoRefreshToken: false }
   })
 
-/** Service-role client. Only for the global ceiling, which spans all users. */
-const adminClient = () =>
-  createClient(process.env.PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, {
-    auth: { persistSession: false, autoRefreshToken: false }
+/**
+ * Count rows across all users, for the global ceiling only.
+ *
+ * A plain fetch rather than the Supabase client on purpose. This is the spend
+ * guardrail, and it should depend on as little as possible: the client library
+ * initialises a realtime WebSocket stack that this never uses and that needs a
+ * polyfill below Node 22. One HTTP request with a count header has no such
+ * failure modes and is easier to reason about when it is the thing standing
+ * between a bug and an unbounded bill.
+ */
+const countAll = async (table, sinceIso) => {
+  const url = `${process.env.PUBLIC_SUPABASE_URL}/rest/v1/${table}?select=id&started_at=gte.${sinceIso}`
+  const response = await fetch(url, {
+    headers: {
+      apikey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+      Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
+      Prefer: 'count=exact',
+      Range: '0-0'
+    }
   })
+  if (!response.ok) throw new Error(`count failed: ${response.status}`)
+  // content-range comes back as "0-0/123"; the total is what we want.
+  const total = Number((response.headers.get('content-range') ?? '').split('/')[1])
+  return Number.isFinite(total) ? total : 0
+}
 
 const since = (ms) => new Date(Date.now() - ms).toISOString()
 
@@ -128,19 +148,17 @@ export const checkGlobalCeiling = async () => {
     }
   }
 
-  const { count, error } = await adminClient()
-    .from('sessions')
-    .select('id', { count: 'exact', head: true })
-    .gte('started_at', since(DAY))
-
-  // A query failure IS transient, and blocking every player over a momentary
-  // database blip is the wrong trade. The per-user weekly cap still stands.
-  if (error) return { allowed: true, degraded: true }
-
-  return {
-    allowed: (count ?? 0) < LIMITS.sessionsPerDayGlobal,
-    used: count ?? 0,
-    limit: LIMITS.sessionsPerDayGlobal
+  try {
+    const used = await countAll('sessions', since(DAY))
+    return {
+      allowed: used < LIMITS.sessionsPerDayGlobal,
+      used,
+      limit: LIMITS.sessionsPerDayGlobal
+    }
+  } catch {
+    // A query failure IS transient, and blocking every player over a momentary
+    // database blip is the wrong trade. The per-user weekly cap still stands.
+    return { allowed: true, degraded: true }
   }
 }
 
