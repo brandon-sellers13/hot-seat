@@ -46,7 +46,8 @@
     { href: '/', label: 'Home' },
     { href: '/daily', label: 'Daily' },
     { href: '/hot-seat', label: 'Hot Seat' },
-    { href: '/reference', label: 'Reference' }
+    { href: '/reference', label: 'Reference' },
+    { href: '/progress', label: 'Progress' }
   ]
 
   const isCurrent = (href) =>
