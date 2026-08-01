@@ -44,9 +44,9 @@ export const SECTIONS = [
         note: 'Monthly basis. Includes new business.',
         head: ['Month', 'New', 'Expansion', 'Contraction', 'Churn', 'Ending MRR'],
         rows: [
-          ['July', '$34,000', '$26,000', '$6,500', '$13,000', '$975,500'],
-          ['August', '$36,000', '$25,000', '$7,000', '$14,000', '$1,015,500'],
-          ['September', '$35,000', '$25,000', '$6,500', '$11,000', '$1,058,000']
+          ['July', '$34,000', '$26,000', '$6,500', '$13,000', '$990,500'],
+          ['August', '$35,000', '$25,000', '$7,000', '$14,000', '$1,029,500'],
+          ['September', '$36,000', '$25,000', '$5,500', '$11,000', '$1,074,000']
         ]
       },
       {
@@ -260,70 +260,83 @@ export const SECTIONS = [
 /**
  * The twelve questions.
  *
- * `sources` lists the sections a correct answer actually requires. It is never
- * shown to the player; it exists so the log can tell us whether they went
- * straight there or hunted, which is the entire measurement.
+ * Every one is a question a director would actually ask. An earlier draft split
+ * these into "retrieval" and "computation", which was a design error: nobody in
+ * a board meeting asks you to look up a number in isolation. They ask about the
+ * business, and looking something up is a step inside the answer. Worse, that
+ * split produced questions like "how many customers did we have", which is a
+ * lookup exercise wearing a metric's clothes and made the first thing a player
+ * saw the least interesting thing in the game.
+ *
+ * Retrieval skill is still measured. It is measured from the navigation log,
+ * which shows which sections were opened and how quickly, and that is a better
+ * instrument than asking about it directly.
+ *
+ * `span` is how many source sections a correct answer requires. It predicts
+ * difficulty far better than any label, because crossing sections is exactly
+ * what you cannot do without knowing where a metric's inputs live.
+ *
+ * `sources` is never shown to the player. It exists so the log can say whether
+ * they went straight there or hunted.
  */
 export const QUESTIONS = [
-  // --- Retrieval: the figure is present, but several plausible ones are too ---
-  { id: 'R1', kind: 'retrieval', targetSec: 20, unit: 'count', answer: 420, tol: 0,
-    q: 'How many paying customers did we have at the start of the quarter?',
-    sources: ['cohorts'],
-    trap: 'Ending count (462), all accounts including trials (507), and new accounts (63) are all present.' },
-
-  { id: 'R2', kind: 'retrieval', targetSec: 20, unit: 'usd', answer: 6300000, tol: 0,
-    q: 'What was Enterprise ARR at the start of the quarter?',
-    sources: ['cohorts'],
-    trap: 'Requires picking the segment and the opening date, not the plan-mix list price.' },
-
-  { id: 'R3', kind: 'retrieval', targetSec: 20, unit: 'usd', answer: 432000, tol: 0,
-    q: 'What did we spend on paid media in Q3?',
-    sources: ['acquisition'],
-    trap: 'Total S&M is $1,584,000. Sales salaries are the largest single line.' },
-
-  { id: 'R4', kind: 'retrieval', targetSec: 20, unit: 'usd', answer: 1260000, tol: 0,
-    q: 'How much new ARR did we add from new customers in Q3?',
-    sources: ['acquisition'],
-    trap: 'Expansion ARR of $912,000 is not new business.' },
-
-  { id: 'R5', kind: 'retrieval', targetSec: 20, unit: 'count', answer: 21, tol: 0,
-    q: 'How many accounts from the opening cohort cancelled outright during Q3?',
-    sources: ['cohorts'],
-    trap: 'Downgraded-but-retained (23) sits in the adjacent column.' },
-
-  { id: 'R6', kind: 'retrieval', targetSec: 20, unit: 'usd', answer: 1021000, tol: 0,
-    q: 'What was recognised revenue in September?',
-    sources: ['revenue'],
-    trap: 'September billings were $1,502,000. Billed is not recognised.' },
-
-  // --- Computation: inputs present, answer absent, formula must be known ---
-  { id: 'C1', kind: 'computation', targetSec: 40, unit: 'pct', answer: 102.0, tol: 0.3,
-    q: 'What was our net revenue retention for Q3? Answer as a percentage.',
+  { id: 'Q1', span: 2, unit: 'pct', answer: 102.0, tol: 0.3,
+    q: 'Start with retention. What was our net revenue retention this quarter?',
     sources: ['cohorts', 'billing'],
-    trap: 'Opening cohort ARR is in one section, the movements against it in another. New business must be excluded.' },
+    trap: 'The opening cohort is in one section and the movements against it in another. New business must be excluded, or you are reporting a growth rate.' },
 
-  { id: 'C2', kind: 'computation', targetSec: 40, unit: 'pct', answer: 94.0, tol: 0.3,
-    q: 'What was our gross revenue retention for Q3? Answer as a percentage.',
+  { id: 'Q2', span: 2, unit: 'pct', answer: 94.0, tol: 0.3,
+    q: 'And gross retention, before any expansion?',
     sources: ['cohorts', 'billing'],
-    trap: 'Expansion must be excluded entirely. Anyone who includes it returns the NRR figure.' },
+    trap: 'Expansion comes out entirely. Anyone who leaves it in returns the NRR figure again.' },
 
-  { id: 'C3', kind: 'computation', targetSec: 40, unit: 'pct', answer: 5.0, tol: 0.2,
-    q: 'What was our logo churn rate for Q3? Answer as a percentage.',
-    sources: ['cohorts'],
-    trap: 'Denominator is the opening cohort, not the ending or all-accounts population.' },
-
-  { id: 'C4', kind: 'computation', targetSec: 40, unit: 'usd', answer: 18000, tol: 200,
-    q: 'What was our customer acquisition cost for the paid media channel in Q3?',
-    sources: ['acquisition'],
-    trap: 'Must use paid media spend against paid media accounts only, not blended.' },
-
-  { id: 'C5', kind: 'computation', targetSec: 40, unit: 'months', answer: 16.0, tol: 0.6,
-    q: 'What is CAC payback for the paid media channel, in months, on a gross-margin basis?',
-    sources: ['acquisition', 'revenue'],
-    trap: 'Gross margin is not printed. It must be derived from revenue and cost of revenue in another section.' },
-
-  { id: 'C6', kind: 'computation', targetSec: 40, unit: 'ratio', answer: 3.18, tol: 0.08,
-    q: 'What was our SaaS quick ratio for Q3?',
+  { id: 'Q3', span: 2, unit: 'usd', answer: 1488000, tol: 20000,
+    q: 'What was net new ARR for the quarter?',
     sources: ['billing', 'acquisition'],
-    trap: 'New ARR sits in acquisition; expansion, contraction and churn sit in billing.' }
+    trap: 'New business plus expansion, less contraction and churn. New ARR alone is gross, not net.' },
+
+  { id: 'Q4', span: 3, unit: 'usd', answer: 12888000, tol: 150000,
+    q: 'Where did we exit the quarter on ARR?',
+    sources: ['cohorts', 'billing', 'acquisition'],
+    trap: 'Opening, plus every movement, plus new business. The ending cohort figure excludes new customers and is the most common wrong answer.' },
+
+  { id: 'Q5', span: 2, unit: 'ratio', answer: 3.18, tol: 0.08,
+    q: 'What is our quick ratio?',
+    sources: ['billing', 'acquisition'],
+    trap: 'New and expansion over contraction and churn. New ARR sits in acquisition, the rest in billing.' },
+
+  { id: 'Q6', span: 1, unit: 'pct', answer: 5.0, tol: 0.2,
+    q: 'How many customers did we actually lose, as a rate?',
+    sources: ['cohorts'],
+    trap: 'Denominator is the opening cohort. Downgraded-but-retained accounts are not churn.' },
+
+  { id: 'Q7', span: 2, unit: 'pct', answer: 42.0, tol: 1.0,
+    q: 'What share of our growth came from existing customers rather than new ones?',
+    sources: ['billing', 'acquisition'],
+    trap: 'Expansion against expansion plus new ARR. A board asks this to find out whether growth is bought or earned.' },
+
+  { id: 'Q8', span: 1, unit: 'usd', answer: 18000, tol: 300,
+    q: 'What are we paying to acquire a customer through paid media?',
+    sources: ['acquisition'],
+    trap: 'Paid media spend against paid media accounts only. Using total spend gives blended, which is a different number and a different argument.' },
+
+  { id: 'Q9', span: 1, unit: 'usd', answer: 25143, tol: 600,
+    q: 'And blended, across everything we spend?',
+    sources: ['acquisition'],
+    trap: 'All sales and marketing spend, including salaries and tools, against every new customer.' },
+
+  { id: 'Q10', span: 1, unit: 'pct', answer: 75.0, tol: 0.5,
+    q: 'What is our gross margin?',
+    sources: ['revenue'],
+    trap: 'Revenue less cost of revenue, over revenue. Billed is not revenue.' },
+
+  { id: 'Q11', span: 2, unit: 'months', answer: 16.0, tol: 0.7,
+    q: 'How long does paid media take to pay back, on a gross margin basis?',
+    sources: ['acquisition', 'revenue'],
+    trap: 'Gross margin is not printed anywhere. It has to be derived in another section first, which is what makes this the hardest question here.' },
+
+  { id: 'Q12', span: 1, unit: 'pct', answer: 75.0, tol: 1.0,
+    q: 'Of the accounts that started in August, what share got to first value?',
+    sources: ['product'],
+    trap: 'Activated within the stated window, against that month\'s starts. Not against all new accounts for the quarter.' }
 ]

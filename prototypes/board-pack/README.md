@@ -43,6 +43,15 @@ the question wants.
 **A calculator is provided.** Arithmetic speed is not the skill being measured;
 knowing which numbers to put in is.
 
+**Every question is one a director would actually ask.** An earlier draft split
+questions into "retrieval" and "computation" and produced things like "how many
+customers did we have at the start of the quarter" — a lookup exercise wearing a
+metric's clothes, and the least interesting thing in the game sitting at
+question one. Nobody in a board meeting asks you to retrieve a number in
+isolation; they ask about the business and the lookup is a step inside the
+answer. Retrieval is still measured, from the navigation log, which is a better
+instrument anyway.
+
 **Nobody is cut off.** Timings are recorded, not enforced. Enforcing a window
 before knowing what a knowledgeable player actually needs would measure
 interface speed.
@@ -53,9 +62,14 @@ Three numbers matter, and they are on the results screen:
 
 | | What it means |
 |---|---|
-| Retrieval accuracy and median time | Can they find the right figure among decoys |
-| Computation accuracy and median time | Do they know the formula and its inputs |
+| Single-source accuracy and time | Everything needed sits in one section |
+| Across-source accuracy and time | Inputs are split, so you must know where they live |
 | Navigation split | Answered cold, went straight to the right source, or hunted |
+
+The across-source half is where the signal is. Crossing sections is the thing
+you cannot do without knowing what a metric is built from, so that is where an
+expert should pull away from a fast reader. If the two groups separate on
+single-source questions but not across-source ones, the pack is leaking.
 
 The navigation split is the sharpest signal. Someone who knows the metrics opens
 one or two sections. Someone who does not opens five and reads.

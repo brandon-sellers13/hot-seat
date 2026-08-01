@@ -146,13 +146,13 @@ const renderSection = () => {
 const question = () => {
   const qn = QUESTIONS[qi]
   const qStart = performance.now()
-  record('question_shown', { kind: qn.kind })
+  record('question_shown', { span: qn.span })
 
   app.innerHTML = `
     <div class="bar">
-      <span class="eyebrow">${qi + 1} of ${QUESTIONS.length} &middot; ${qn.kind}</span>
+      <span class="eyebrow">${qi + 1} of ${QUESTIONS.length}</span>
       <span class="clock" id="clock">0.0s</span>
-      <span class="muted" id="target">target ${qn.targetSec}s</span>
+      <span class="muted">${qn.span === 1 ? 'one source' : qn.span + ' sources needed'}</span>
     </div>
     <div class="qbox"><p class="q">${esc(qn.q)}</p></div>
     <div class="bar">
@@ -172,7 +172,6 @@ const question = () => {
   tick = setInterval(() => {
     const s = (performance.now() - qStart) / 1000
     clock.textContent = s.toFixed(1) + 's'
-    clock.classList.toggle('over', s > qn.targetSec)
   }, 100)
 
   const bindTabs = () => {
@@ -210,8 +209,8 @@ const question = () => {
     const elapsed = (performance.now() - qStart) / 1000
     const ok = isCorrect(qn, val)
     const tabsUsed = [...new Set(log.filter((e) => e.q === qn.id && e.type === 'tab').map((e) => e.section))]
-    results.push({ id: qn.id, kind: qn.kind, raw, val, ok, seconds: +elapsed.toFixed(1),
-                   onTarget: elapsed <= qn.targetSec, tabsUsed, neededTabs: qn.sources })
+    results.push({ id: qn.id, span: qn.span, raw, val, ok, seconds: +elapsed.toFixed(1),
+                   tabsUsed, neededTabs: qn.sources })
     record('answer', { raw, val, ok, seconds: +elapsed.toFixed(1) })
 
     document.getElementById('verdict').innerHTML = `
@@ -232,7 +231,7 @@ const question = () => {
 }
 
 const summary = () => {
-  const by = (k) => results.filter((r) => r.kind === k)
+  const by = (f) => results.filter(f)
   const acc = (rs) => rs.length ? Math.round((rs.filter((r) => r.ok).length / rs.length) * 100) : 0
   const med = (rs) => {
     const v = rs.map((r) => r.seconds).sort((a, b) => a - b)
@@ -253,14 +252,16 @@ const summary = () => {
     <h1>${acc(results)}% correct, median ${med(results)}s</h1>
     <div class="grid" style="margin:20px 0">
       <div class="card">
-        <p class="eyebrow">Retrieval</p>
-        <p><strong>${acc(by('retrieval'))}%</strong> correct, median ${med(by('retrieval'))}s</p>
-        <p class="muted">Finding a figure among plausible neighbours.</p>
+        <p class="eyebrow">Single source</p>
+        <p><strong>${acc(by((r) => r.span === 1))}%</strong> correct, median ${med(by((r) => r.span === 1))}s</p>
+        <p class="muted">Everything needed sits in one section.</p>
       </div>
       <div class="card">
-        <p class="eyebrow">Computation</p>
-        <p><strong>${acc(by('computation'))}%</strong> correct, median ${med(by('computation'))}s</p>
-        <p class="muted">Knowing the formula and which inputs feed it.</p>
+        <p class="eyebrow">Across sources</p>
+        <p><strong>${acc(by((r) => r.span > 1))}%</strong> correct, median ${med(by((r) => r.span > 1))}s</p>
+        <p class="muted">Inputs are split across sections. This is the half that
+          cannot be done without knowing where a metric's inputs live, and the
+          half where an expert should pull away from a fast reader.</p>
       </div>
     </div>
     <div class="card" style="margin-bottom:20px">
@@ -273,9 +274,9 @@ const summary = () => {
         with no metric knowledge has to do.</p>
     </div>
     <table class="sum">
-      <thead><tr><th>Q</th><th>Kind</th><th>Answer</th><th>Right</th><th>Secs</th><th>Sections opened</th></tr></thead>
+      <thead><tr><th>Q</th><th>Sources</th><th>Answer</th><th>Right</th><th>Secs</th><th>Sections opened</th></tr></thead>
       <tbody>${results.map((r) => `<tr>
-        <td>${r.id}</td><td>${r.kind}</td><td>${esc(r.raw)}</td>
+        <td>${r.id}</td><td>${r.span}</td><td>${esc(r.raw)}</td>
         <td style="color:${r.ok ? 'var(--good)' : 'var(--bad)'}">${r.ok ? 'yes' : 'no'}</td>
         <td>${r.seconds}</td><td>${r.tabsUsed.join(', ') || '(none)'}</td></tr>`).join('')}</tbody>
     </table>
