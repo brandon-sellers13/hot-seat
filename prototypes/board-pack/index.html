@@ -1,0 +1,297 @@
+<meta charset="utf-8" />
+<title>Board pack — falsification prototype</title>
+<style>
+  :root {
+    --bg: #fafaf8; --card: #fff; --border: #e8e6e1; --text: #1a1a1a;
+    --mid: #4a4a4a; --muted: #6a6a6a; --accent: #3d63dd; --good: #059669; --bad: #dc2626;
+    --sans: 'DM Sans', -apple-system, system-ui, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.55; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 24px 20px 64px; }
+  h1 { font-size: 1.5rem; letter-spacing: -0.02em; margin: 0 0 4px; }
+  h2 { font-size: 1.05rem; margin: 0 0 2px; }
+  .eyebrow { font-family: var(--mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); }
+  .muted { color: var(--muted); font-size: .88rem; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  button { font-family: var(--sans); font-size: .92rem; padding: 9px 16px; border-radius: 8px;
+           border: 1px solid var(--border); background: var(--card); color: var(--text); cursor: pointer; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  table { border-collapse: collapse; width: 100%; font-size: .87rem; margin-top: 8px; }
+  th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--border); }
+  th { font-family: var(--mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 500; }
+  td:not(:first-child) { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+  .tabs button { font-size: .85rem; padding: 7px 13px; }
+  .tabs button[aria-current='true'] { background: var(--text); border-color: var(--text); color: #fff; }
+  .tbl { margin-bottom: 22px; }
+  .tbl .note { font-size: .8rem; color: var(--muted); margin-top: 2px; }
+  .bar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
+  .clock { font-family: var(--mono); font-size: 1.15rem; font-variant-numeric: tabular-nums; }
+  .over { color: var(--bad); }
+  .qbox { border-left: 3px solid var(--accent); padding-left: 14px; margin-bottom: 16px; }
+  .q { font-size: 1.1rem; font-weight: 500; }
+  input[type=text] { font-family: var(--mono); font-size: 1rem; padding: 9px 12px; width: 190px;
+                     border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--text); }
+  .calc { display: flex; gap: 8px; align-items: center; margin-top: 10px; }
+  .calc input { width: 300px; }
+  .calc .out { font-family: var(--mono); font-size: .95rem; color: var(--accent); }
+  .verdict { padding: 10px 14px; border-radius: 8px; font-size: .9rem; margin-top: 12px; }
+  .ok { background: #05966915; color: var(--good); }
+  .no { background: #dc262615; color: var(--bad); }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } }
+  .sum td:first-child { font-family: var(--mono); font-size: .8rem; }
+</style>
+
+<div class="wrap" id="app"></div>
+
+<script type="module">
+import { COMPANY, SECTIONS, QUESTIONS } from './data.js'
+
+/* ------------------------------------------------------------------------- *
+ * Falsification prototype.
+ *
+ * The one question: does metric knowledge beat fast reading? Everything here
+ * exists to measure that and nothing else. No narrative, no characters, no
+ * voice, no LLM. Grading is deterministic because asking a model whether 102%
+ * is correct would put scoring variance inside the measurement.
+ *
+ * Search is deliberately absent, and only the open section is written to the
+ * DOM, so the browser's own find cannot cross tabs either. Navigating by
+ * source is the skill under test; a text search would replace it.
+ * ------------------------------------------------------------------------- */
+
+const app = document.getElementById('app')
+const log = []
+const results = []
+let qi = 0
+let sec = SECTIONS[0].id
+let t0 = 0
+let tick = null
+
+const record = (type, detail) =>
+  log.push({ t: Math.round(performance.now() - t0), q: QUESTIONS[qi]?.id ?? null, type, ...detail })
+
+const esc = (s) => String(s).replace(/[<>&]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]))
+
+/** Accepts "1,021,000", "$432k", "102%", "16" — the player should not fight the parser. */
+const parseNum = (raw) => {
+  let s = String(raw).trim().toLowerCase().replace(/[$,%\s,]/g, '')
+  let mult = 1
+  if (s.endsWith('k')) { mult = 1e3; s = s.slice(0, -1) }
+  else if (s.endsWith('m')) { mult = 1e6; s = s.slice(0, -1) }
+  const n = Number(s)
+  return Number.isFinite(n) ? n * mult : NaN
+}
+
+const isCorrect = (qn, val) => Math.abs(val - qn.answer) <= qn.tol
+
+const fmt = (qn, v) =>
+  qn.unit === 'usd' ? '$' + v.toLocaleString('en-US')
+  : qn.unit === 'pct' ? v + '%'
+  : qn.unit === 'months' ? v + ' months'
+  : String(v)
+
+// --------------------------------------------------------------------- views
+
+const intro = () => {
+  app.innerHTML = `
+    <p class="eyebrow">Prototype</p>
+    <h1>${COMPANY.name} — ${COMPANY.period}</h1>
+    <p class="muted" style="max-width:62ch">${COMPANY.model}. Twelve questions about this company's
+      numbers. The pack below has everything you need, organised the way a company keeps records
+      rather than by metric. There is no search, on purpose.</p>
+    <div class="card" style="margin:20px 0;max-width:62ch">
+      <p class="eyebrow">What is being measured</p>
+      <p class="muted">Whether knowing the metrics makes you <em>faster</em>, not whether you can find
+        things. Answer as quickly as you can while still being right. Every click and every second is
+        logged. You will not be cut off, so take the time you need and answer honestly.</p>
+      <p class="muted">A calculator is provided. Getting the arithmetic right is not the test;
+        knowing which numbers to put into it is.</p>
+    </div>
+    <div class="bar">
+      <button class="primary" id="go">Start</button>
+      <label class="muted"><input type="radio" name="grp" value="expert" checked> I work with these metrics</label>
+      <label class="muted"><input type="radio" name="grp" value="novice"> I do not</label>
+    </div>`
+  document.getElementById('go').onclick = () => {
+    window.__group = document.querySelector('input[name=grp]:checked').value
+    t0 = performance.now()
+    record('start', { group: window.__group })
+    question()
+  }
+}
+
+const renderSection = () => {
+  const s = SECTIONS.find((x) => x.id === sec)
+  return `
+    <div class="tabs">
+      ${SECTIONS.map((x) => `<button data-sec="${x.id}" aria-current="${x.id === sec}">${x.label}</button>`).join('')}
+    </div>
+    <p class="muted" style="margin-bottom:14px">${s.blurb}</p>
+    ${s.tables.map((t) => `
+      <div class="tbl">
+        <h2>${t.title}</h2>
+        ${t.note ? `<p class="note">${t.note}</p>` : ''}
+        <table>
+          <thead><tr>${t.head.map((h) => `<th>${h}</th>`).join('')}</tr></thead>
+          <tbody>${t.rows.map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join('')}</tr>`).join('')}</tbody>
+        </table>
+      </div>`).join('')}`
+}
+
+const question = () => {
+  const qn = QUESTIONS[qi]
+  const qStart = performance.now()
+  record('question_shown', { kind: qn.kind })
+
+  app.innerHTML = `
+    <div class="bar">
+      <span class="eyebrow">${qi + 1} of ${QUESTIONS.length} &middot; ${qn.kind}</span>
+      <span class="clock" id="clock">0.0s</span>
+      <span class="muted" id="target">target ${qn.targetSec}s</span>
+    </div>
+    <div class="qbox"><p class="q">${esc(qn.q)}</p></div>
+    <div class="bar">
+      <input type="text" id="ans" placeholder="your answer" autocomplete="off" />
+      <button class="primary" id="submit">Submit</button>
+    </div>
+    <div class="calc">
+      <input type="text" id="calc" placeholder="calculator, e.g. (11400000+912000-228000-456000)/11400000*100" autocomplete="off" />
+      <span class="out" id="calcout"></span>
+    </div>
+    <div id="verdict"></div>
+    <hr style="margin:22px 0;border:none;border-top:1px solid var(--border)" />
+    <div id="pack">${renderSection()}</div>`
+
+  const clock = document.getElementById('clock')
+  clearInterval(tick)
+  tick = setInterval(() => {
+    const s = (performance.now() - qStart) / 1000
+    clock.textContent = s.toFixed(1) + 's'
+    clock.classList.toggle('over', s > qn.targetSec)
+  }, 100)
+
+  const bindTabs = () => {
+    document.querySelectorAll('[data-sec]').forEach((b) => {
+      b.onclick = () => {
+        sec = b.dataset.sec
+        record('tab', { section: sec })
+        document.getElementById('pack').innerHTML = renderSection()
+        bindTabs()
+      }
+    })
+  }
+  bindTabs()
+
+  // Calculator. Digits and operators only: this is a convenience, not an eval hole.
+  const calc = document.getElementById('calc')
+  calc.oninput = () => {
+    const raw = calc.value
+    if (!/^[-+*/().\d\s]*$/.test(raw)) { document.getElementById('calcout').textContent = ''; return }
+    try {
+      const v = Function(`"use strict";return (${raw || 0})`)()
+      document.getElementById('calcout').textContent =
+        Number.isFinite(v) ? Number(v.toFixed(4)).toLocaleString('en-US') : ''
+    } catch { document.getElementById('calcout').textContent = '' }
+  }
+  calc.onchange = () => record('calc', { expr: calc.value })
+
+  const ans = document.getElementById('ans')
+  ans.focus()
+  const submit = () => {
+    const raw = ans.value
+    const val = parseNum(raw)
+    if (Number.isNaN(val)) return
+    clearInterval(tick)
+    const elapsed = (performance.now() - qStart) / 1000
+    const ok = isCorrect(qn, val)
+    const tabsUsed = [...new Set(log.filter((e) => e.q === qn.id && e.type === 'tab').map((e) => e.section))]
+    results.push({ id: qn.id, kind: qn.kind, raw, val, ok, seconds: +elapsed.toFixed(1),
+                   onTarget: elapsed <= qn.targetSec, tabsUsed, neededTabs: qn.sources })
+    record('answer', { raw, val, ok, seconds: +elapsed.toFixed(1) })
+
+    document.getElementById('verdict').innerHTML = `
+      <div class="verdict ${ok ? 'ok' : 'no'}">
+        ${ok ? 'Correct' : `Not right — the answer is ${fmt(qn, qn.answer)}`}
+        &middot; ${elapsed.toFixed(1)}s
+        <div class="muted" style="margin-top:4px">${esc(qn.trap)}</div>
+      </div>
+      <div class="bar" style="margin-top:12px"><button class="primary" id="next">
+        ${qi + 1 < QUESTIONS.length ? 'Next question' : 'See results'}</button></div>`
+    document.getElementById('submit').disabled = true
+    ans.disabled = true
+    document.getElementById('next').onclick = () => { qi += 1; qi < QUESTIONS.length ? question() : summary() }
+    document.getElementById('next').focus()
+  }
+  document.getElementById('submit').onclick = submit
+  ans.onkeydown = (e) => { if (e.key === 'Enter') submit() }
+}
+
+const summary = () => {
+  const by = (k) => results.filter((r) => r.kind === k)
+  const acc = (rs) => rs.length ? Math.round((rs.filter((r) => r.ok).length / rs.length) * 100) : 0
+  const med = (rs) => {
+    const v = rs.map((r) => r.seconds).sort((a, b) => a - b)
+    return v.length ? v[Math.floor(v.length / 2)].toFixed(1) : '0'
+  }
+  // Did they go straight to the right source, or hunt? This is the tell that
+  // separates knowing where a metric lives from finding it by looking everywhere.
+  // Opening nothing at all is the strongest signal of the three, not a failure:
+  // it means they answered from knowledge without needing the pack.
+  const noLook = results.filter((r) => !r.tabsUsed.length).length
+  const straight = results.filter((r) => r.tabsUsed.length && r.tabsUsed.every((t) => r.neededTabs.includes(t))).length
+  const hunted = results.length - noLook - straight
+
+  const payload = { group: window.__group, at: new Date().toISOString(), results, log }
+
+  app.innerHTML = `
+    <p class="eyebrow">Result</p>
+    <h1>${acc(results)}% correct, median ${med(results)}s</h1>
+    <div class="grid" style="margin:20px 0">
+      <div class="card">
+        <p class="eyebrow">Retrieval</p>
+        <p><strong>${acc(by('retrieval'))}%</strong> correct, median ${med(by('retrieval'))}s</p>
+        <p class="muted">Finding a figure among plausible neighbours.</p>
+      </div>
+      <div class="card">
+        <p class="eyebrow">Computation</p>
+        <p><strong>${acc(by('computation'))}%</strong> correct, median ${med(by('computation'))}s</p>
+        <p class="muted">Knowing the formula and which inputs feed it.</p>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:20px">
+      <p class="eyebrow">Navigation</p>
+      <p><strong>${noLook}</strong> answered without opening the pack &middot;
+         <strong>${straight}</strong> straight to the right source &middot;
+         <strong>${hunted}</strong> hunted</p>
+      <p class="muted">Opening only the sections a metric actually needs is the signal that someone
+        knows where its inputs live. Opening several is hunting, and hunting is what a fast reader
+        with no metric knowledge has to do.</p>
+    </div>
+    <table class="sum">
+      <thead><tr><th>Q</th><th>Kind</th><th>Answer</th><th>Right</th><th>Secs</th><th>Sections opened</th></tr></thead>
+      <tbody>${results.map((r) => `<tr>
+        <td>${r.id}</td><td>${r.kind}</td><td>${esc(r.raw)}</td>
+        <td style="color:${r.ok ? 'var(--good)' : 'var(--bad)'}">${r.ok ? 'yes' : 'no'}</td>
+        <td>${r.seconds}</td><td>${r.tabsUsed.join(', ') || '(none)'}</td></tr>`).join('')}</tbody>
+    </table>
+    <div class="bar" style="margin-top:20px">
+      <button class="primary" id="dl">Download log</button>
+      <button id="again">Run again</button>
+    </div>`
+
+  document.getElementById('dl').onclick = () => {
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }))
+    a.download = `board-pack-${window.__group}-${Date.now()}.json`
+    a.click()
+  }
+  document.getElementById('again').onclick = () => { location.reload() }
+}
+
+intro()
+</script>
