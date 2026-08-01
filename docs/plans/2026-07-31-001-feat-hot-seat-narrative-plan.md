@@ -1,10 +1,15 @@
 ---
 title: "feat: The Hot Seat as a narrative, time-boxed, voice-first game"
 type: feat
-status: draft
+status: superseded
 date: 2026-07-31
 supersedes: docs/plans/2026-07-30-001-feat-hot-seat-daily-plan.md
 ---
+
+> **SUPERSEDED, 2026-07-31**, same day. The length, narrative and voice
+> decisions here all hold. What changed is the unit of play: this plan still
+> assumed a question was a question. See
+> `docs/plans/2026-07-31-002-feat-the-meeting-plan.md`.
 
 # The Hot Seat, rebuilt around the meeting
 

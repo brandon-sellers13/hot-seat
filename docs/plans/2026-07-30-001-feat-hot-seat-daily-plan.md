@@ -1,11 +1,17 @@
 ---
 title: "feat: The Hot Seat + The Daily — interrogation game on the metrics corpus"
 type: feat
-status: active
+status: superseded
 date: 2026-07-30
 origin: docs/brainstorms/2026-07-29-metrics-retrieval-practice-requirements.md (see Addendum 2026-07-30)
 supersedes: docs/plans/2026-07-29-001-feat-metrics-retrieval-app-plan.md
 ---
+
+> **SUPERSEDED, 2026-07-31.** The Daily is gone, spaced repetition is gone, and
+> the Hot Seat's unit of play changed from a question to a generated exchange
+> between directors. What carries forward and still runs in production: the
+> corpus extraction, the grading spine, the board-answer rubric, identity and the
+> budget controls. See `docs/plans/2026-07-31-002-feat-the-meeting-plan.md`.
 
 # The Hot Seat + The Daily
 
