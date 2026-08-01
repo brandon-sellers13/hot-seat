@@ -1,0 +1,1642 @@
+[
+ {
+  "slug": "net-revenue-retention",
+  "exchange": {
+   "metric": "Net revenue retention (NRR)",
+   "lines": [
+    {
+     "speaker": "Elena",
+     "text": "You're asking us to approve more acquisition budget. Net revenue retention for the opening cohort was 102% in Q3."
+    },
+    {
+     "speaker": "Ravi",
+     "text": "Gross revenue retention was 94%. 21 of the 420 opening accounts fully cancelled."
+    },
+    {
+     "speaker": "Camille",
+     "text": "Another 23 downgraded but stayed. Expansion was $912,000."
+    },
+    {
+     "speaker": "Adrian",
+     "text": "The pack does not show expansion by customer."
+    }
+   ],
+   "question": {
+    "speaker": "Camille",
+    "text": "Does the 102% NRR establish broad-based strength in the opening cohort?"
+   },
+   "strong_answer": "No. NRR was 102%, but GRR was 94% and logo retention was 95%. Expansion contributed 8 percentage points, offsetting contraction and churn. Because the pack does not show expansion by customer, it cannot establish whether that expansion was broad-based or concentrated in one account, so NRR alone cannot support the ask.",
+   "tests": "NRR versus GRR and logo retention; dollar weighting; expansion concentration; recognizing when the pack cannot establish breadth.",
+   "figures": [
+    {
+     "value": "102%",
+     "derivation": "($11,400,000 + $912,000 - $228,000 - $456,000) / $11,400,000 = 102%"
+    },
+    {
+     "value": "94%",
+     "derivation": "($11,400,000 - $228,000 - $456,000) / $11,400,000 = 94%"
+    },
+    {
+     "value": "21",
+     "derivation": "Copied from opening cohort outcomes during Q3: total fully cancelled."
+    },
+    {
+     "value": "420",
+     "derivation": "Copied from customer base at 1 July 2026: total opening accounts."
+    },
+    {
+     "value": "23",
+     "derivation": "Copied from opening cohort outcomes during Q3: total downgraded but retained."
+    },
+    {
+     "value": "$912,000",
+     "derivation": "Copied from ARR movement, Q3: expansion."
+    },
+    {
+     "value": "95%",
+     "derivation": "399 still-active opening accounts / 420 opening accounts = 95%"
+    },
+    {
+     "value": "8 percentage points",
+     "derivation": "102% NRR - 94% GRR = 8 percentage points"
+    }
+   ]
+  },
+  "audit": {
+   "fabricated": [],
+   "conclusion_stated": false,
+   "conclusion_quote": "",
+   "single_question": true,
+   "opens_on_ask": true,
+   "half_assist_present": true,
+   "verdict": "pass",
+   "reason": "All figures spoken by directors are either verbatim in the pack or correctly derivable. The directors state relevant metrics and a data limitation without walking through arithmetic or stating the decision implication. There is exactly one interrogative aimed at the player, and the exchange opens by naming the acquisition-budget approval ask."
+  }
+ },
+ {
+  "slug": "gross-revenue-retention",
+  "exchange": {
+   "metric": "Gross revenue retention (GRR)",
+   "lines": [
+    {
+     "speaker": "Elena",
+     "text": "Your ask is approval for more paid-media budget, backed by the retention quarter."
+    },
+    {
+     "speaker": "Camille",
+     "text": "Net revenue retention for the opening cohort is 102%."
+    },
+    {
+     "speaker": "Ravi",
+     "text": "Gross revenue retention for that cohort is 94%."
+    },
+    {
+     "speaker": "Camille",
+     "text": "The same cohort produced $912,000 of expansion."
+    },
+    {
+     "speaker": "Elena",
+     "text": "It also recorded $456,000 of full cancellations and $228,000 of contraction."
+    },
+    {
+     "speaker": "Adrian",
+     "text": "NRR includes the expansion; GRR excludes it."
+    }
+   ],
+   "question": {
+    "speaker": "Adrian",
+    "text": "Which retention figure should we use to judge the retention case for your budget ask?"
+   },
+   "strong_answer": "Use 94% GRR. It measures losses from the opening cohort without allowing $912,000 of expansion to offset $456,000 of churn and $228,000 of contraction. The 102% NRR describes total cohort economics but cannot establish stickiness on its own; channel economics must still determine where acquisition budget goes.",
+   "tests": "GRR versus NRR; excluding expansion; identifying the appropriate retention measure without treating it as sufficient evidence for channel investment.",
+   "figures": [
+    {
+     "value": "102%",
+     "derivation": "($11,400,000 + $912,000 - $456,000 - $228,000) \u00f7 $11,400,000 = 102%"
+    },
+    {
+     "value": "94%",
+     "derivation": "($11,400,000 - $456,000 - $228,000) \u00f7 $11,400,000 = 94%"
+    },
+    {
+     "value": "$912,000",
+     "derivation": "Copied from ARR movement, Q3: Expansion."
+    },
+    {
+     "value": "$456,000",
+     "derivation": "Copied from ARR movement, Q3: Churn."
+    },
+    {
+     "value": "$228,000",
+     "derivation": "Copied from ARR movement, Q3: Contraction."
+    }
+   ]
+  },
+  "audit": {
+   "fabricated": [],
+   "conclusion_stated": false,
+   "conclusion_quote": "",
+   "single_question": true,
+   "opens_on_ask": true,
+   "half_assist_present": true,
+   "verdict": "pass",
+   "reason": "All spoken figures are either verbatim from the pack or correctly derivable: NRR is 102% and GRR is 94%. No director walks through arithmetic or states which metric should drive the decision. There is exactly one question aimed at the player, and the exchange opens by naming the paid-media budget approval ask."
+  }
+ },
+ {
+  "slug": "customer-churn-rate",
+  "exchange": {
+   "metric": "Logo churn rate",
+   "lines": [
+    {
+     "speaker": "Elena",
+     "text": "You are asking us to approve additional customer-success headcount to address account churn."
+    },
+    {
+     "speaker": "Ravi",
+     "text": "Twenty-one of 420 opening accounts fully cancelled during the quarter. Logo churn was 5%."
+    },
+    {
+     "speaker": "Camille",
+     "text": "Fourteen of 260 SMB accounts cancelled, alongside six of 118 mid-market accounts and one of 42 enterprise accounts."
+    },
+    {
+     "speaker": "Elena",
+     "text": "Revenue churn was $456,000, or 4% of opening ARR."
+    },
+    {
+     "speaker": "Ravi",
+     "text": "Another 23 accounts downgraded while remaining customers, with $228,000 of contraction."
+    },
+    {
+     "speaker": "Camille",
+     "text": "The pack does not split that $456,000 or $228,000 by segment."
+    }
+   ],
+   "question": {
+    "speaker": "Adrian",
+    "text": "If the headcount case rests on logo churn, which segment should receive the added coverage?"
+   },
+   "strong_answer": "SMB. Its logo churn rate was 5.38%, compared with 5.08% for mid-market and 2.38% for enterprise. That supports directing logo-retention coverage to SMB, although the pack cannot establish the segment-level ARR return because neither churn nor contraction dollars are split by segment.",
+   "tests": "Calculating segment-specific logo churn with the correct opening-account denominators; distinguishing logo churn from revenue exposure; limiting the conclusion to what the pack supports.",
+   "figures": [
+    {
+     "value": "21",
+     "derivation": "Copied from opening cohort outcomes: total fully cancelled accounts."
+    },
+    {
+     "value": "420",
+     "derivation": "Copied from the opening customer cohort total."
+    },
+    {
+     "value": "5%",
+     "derivation": "21 fully cancelled accounts \u00f7 420 opening accounts = 5%."
+    },
+    {
+     "value": "14 of 260",
+     "derivation": "Copied from SMB opening cohort outcomes and opening account count."
+    },
+    {
+     "value": "6 of 118",
+     "derivation": "Copied from mid-market opening cohort outcomes and opening account count."
+    },
+    {
+     "value": "1 of 42",
+     "derivation": "Copied from enterprise opening cohort outcomes and opening account count."
+    },
+    {
+     "value": "$456,000",
+     "derivation": "Copied from ARR movement: churn from full cancellations."
+    },
+    {
+     "value": "4%",
+     "derivation": "$456,000 churn \u00f7 $11,400,000 opening ARR = 4%."
+    },
+    {
+     "value": "23",
+     "derivation": "Copied from opening cohort outcomes: total downgraded but retained accounts."
+    },
+    {
+     "value": "$228,000",
+     "derivation": "Copied from ARR movement: contraction."
+    },
+    {
+     "value": "5.38%",
+     "derivation": "14 SMB cancellations \u00f7 260 opening SMB accounts = 5.3846%, rounded to 5.38%."
+    },
+    {
+     "value": "5.08%",
+     "derivation": "6 mid-market cancellations \u00f7 118 opening mid-market accounts = 5.0847%, rounded to 5.08%."
+    },
+    {
+     "value": "2.38%",
+     "derivation": "1 enterprise cancellation \u00f7 42 opening enterprise accounts = 2.3810%, rounded to 2.38%."
+    }
+   ]
+  },
+  "audit": {
+   "fabricated": [],
+   "conclusion_stated": true,
+   "conclusion_quote": "Twenty-one of 420 opening accounts fully cancelled during the quarter. Logo churn was 5%.",
+   "single_question": true,
+   "opens_on_ask": true,
+   "half_assist_present": true,
+   "verdict": "fail",
+   "reason": "A director states a derived churn-rate conclusion by pairing 21 cancellations with 420 opening accounts and giving the calculated 5% result. Elena likewise states the derived 4% of opening ARR. The single question and all figures are otherwise supported."
+  }
+ },
+ {
+  "slug": "saas-quick-ratio",
+  "exchange": {
+   "metric": "SaaS Quick Ratio",
+   "lines": [
+    {
+     "speaker": "Elena",
+     "text": "You're asking us to increase the paid-media budget."
+    },
+    {
+     "speaker": "Camille",
+     "text": "September's SaaS quick ratio was 3.70."
+    },
+    {
+     "speaker": "Elena",
+     "text": "For the full quarter it was 3.18."
+    },
+    {
+     "speaker": "Ravi",
+     "text": "The quarter's numerator included $76,000 of expansion from existing customers."
+    },
+    {
+     "speaker": "Adrian",
+     "text": "Paid media generated $432,000 of new ARR. Partner referral generated $540,000."
+    },
+    {
+     "speaker": "Elena",
+     "text": "Paid media spend was $432,000. Partner and channel fees were $216,000."
+    }
+   ],
+   "question": {
+    "speaker": "Camille",
+    "text": "Which figure in the quick ratio establishes that paid media deserves the increase?"
+   },
+   "strong_answer": "None. The quick ratio is company-wide and combines new MRR with expansion MRR, so it cannot attribute growth efficiency to paid media. The channel data instead shows paid media used $432,000 to generate $432,000 of new ARR, while partner referral used $216,000 to generate $540,000. Do not approve the increase on this metric; redirect the ask toward partner referral or provide channel-level retention economics.",
+   "tests": "Period sensitivity; distinguishing a company-wide metric from channel economics; recognizing that the quick ratio cannot distinguish new revenue from expansion; willingness to reject or redirect the budget ask.",
+   "figures": [
+    {
+     "value": "3.70",
+     "derivation": "September SaaS quick ratio: ($36,000 new MRR + $25,000 expansion MRR) \u00f7 ($11,000 churn MRR + $5,500 contraction MRR) = $61,000 \u00f7 $16,500 = 3.6969, rounded to 3.70."
+    },
+    {
+     "value": "3.18",
+     "derivation": "Q3 SaaS quick ratio: (($34,000 + $35,000 + $36,000) new MRR + ($26,000 + $25,000 + $25,000) expansion MRR) \u00f7 (($13,000 + $14,000 + $11,000) churn MRR + ($6,500 + $7,000 + $5,500) contraction MRR) = $181,000 \u00f7 $57,000 = 3.1754, rounded to 3.18."
+    },
+    {
+     "value": "$76,000",
+     "derivation": "Q3 expansion MRR: $26,000 + $25,000 + $25,000 = $76,000."
+    },
+    {
+     "value": "$432,000",
+     "derivation": "Copied from the board pack: paid media generated $432,000 of new ARR and paid media spend was $432,000."
+    },
+    {
+     "value": "$540,000",
+     "derivation": "Copied from the board pack: partner referral generated $540,000 of new ARR."
+    },
+    {
+     "value": "$216,000",
+     "derivation": "Copied from the board pack: partner and channel fees were $216,000."
+    }
+   ]
+  },
+  "audit": {
+   "fabricated": [],
+   "conclusion_stated": false,
+   "conclusion_quote": "",
+   "single_question": true,
+   "opens_on_ask": true,
+   "half_assist_present": true,
+   "verdict": "pass",
+   "reason": "All director-spoken figures are verbatim from or correctly derivable from the pack. No director walks through arithmetic or states the decision implication. The exchange opens with the ask and contains exactly one player-directed question."
+  }
+ },
+ {
+  "slug": "cac-payback-period",
+  "exchange": {
+   "metric": "CAC payback period",
+   "lines": [
+    {
+     "speaker": "Elena",
+     "text": "You're asking us to approve another $432,000 for paid media."
+    },
+    {
+     "speaker": "Ravi",
+     "text": "Paid media brought in 24 accounts and $432,000 of new ARR. Its direct-spend payback is 12 months on revenue."
+    },
+    {
+     "speaker": "Camille",
+     "text": "Gross margin was 75%. Paid media's gross-margin payback is 16 months."
+    },
+    {
+     "speaker": "Elena",
+     "text": "Those views include the media line. The pack also shows $576,000 of sales salaries and commission and $216,000 of tools and data, with no channel allocation."
+    },
+    {
+     "speaker": "Adrian",
+     "text": "Partner referral is at 6.4 months on the same direct-spend, gross-margin basis."
+    }
+   ],
+   "question": {
+    "speaker": "Adrian",
+    "text": "Is the 16-month paid-media payback enough to support your $432,000 request?"
+   },
+   "strong_answer": "No. The 16-month figure is the appropriate gross-margin view, rather than the 12-month revenue view, but it is not fully loaded because sales salaries, commission, tools and data are not allocated by channel. Partner referral also delivers 6.4-month payback on the same direct-spend, gross-margin basis. Withhold or redirect the request until the shared costs are allocated and paid media can be compared on fully loaded economics.",
+   "tests": "Revenue-basis versus gross-margin payback; direct-spend versus fully loaded CAC; consistent channel comparison; knowing when the pack does not support the budget request.",
+   "figures": [
+    {
+     "value": "$432,000",
+     "derivation": "Copied from Q3 paid-media spend and paid-media new ARR."
+    },
+    {
+     "value": "24",
+     "derivation": "Copied from paid-media new accounts won in Q3."
+    },
+    {
+     "value": "12 months",
+     "derivation": "Paid-media CAC is $432,000 / 24 = $18,000; monthly revenue per new account is ($432,000 / 24) / 12 = $1,500; $18,000 / $1,500 = 12 months."
+    },
+    {
+     "value": "75%",
+     "derivation": "Q3 recognised revenue is $985,000 + $1,002,000 + $1,021,000 = $3,008,000; cost of revenue is $246,250 + $250,500 + $255,250 = $752,000; ($3,008,000 - $752,000) / $3,008,000 = 75%."
+    },
+    {
+     "value": "16 months",
+     "derivation": "Paid-media CAC is $18,000; monthly gross profit per new account is $1,500 \u00d7 75% = $1,125; $18,000 / $1,125 = 16 months."
+    },
+    {
+     "value": "$576,000",
+     "derivation": "Copied from Q3 sales salaries and commission."
+    },
+    {
+     "value": "$216,000",
+     "derivation": "Copied from Q3 tools and data."
+    },
+    {
+     "value": "6.4 months",
+     "derivation": "Partner CAC is $216,000 / 18 = $12,000; monthly revenue per account is ($540,000 / 18) / 12 = $2,500; monthly gross profit is $2,500 \u00d7 75% = $1,875; $12,000 / $1,875 = 6.4 months."
+    }
+   ]
+  },
+  "audit": {
+   "fabricated": [],
+   "conclusion_stated": false,
+   "conclusion_quote": "",
+   "single_question": true,
+   "opens_on_ask": true,
+   "half_assist_present": true,
+   "verdict": "pass",
+   "reason": "All director-spoken figures are verbatim from the pack or correctly derivable. No director walks through arithmetic or states the decision implication. There is exactly one interrogative aimed at the player, and the exchange opens by naming the $432,000 paid-media approval request."
+  }
+ },
+ {
+  "slug": "customer-acquisition-cost",
+  "exchange": {
+   "metric": "Customer acquisition cost (CAC)",
+   "lines": [
+    {
+     "speaker": "Elena",
+     "text": "The ask is more paid-media budget. The pack shows $1,584,000 of sales and marketing spend and 63 new accounts."
+    },
+    {
+     "speaker": "Ravi",
+     "text": "There are also 38 free trials in flight."
+    },
+    {
+     "speaker": "Camille",
+     "text": "Paid media spent $432,000 and won 24 accounts. Partner referral spent $216,000 and won 18."
+    },
+    {
+     "speaker": "Elena",
+     "text": "Sales salaries and commission were $576,000, while tools and data were $216,000. The pack does not allocate either line by channel."
+    }
+   ],
+   "question": {
+    "speaker": "Adrian",
+    "text": "Which of paid media and partner referral would you identify as having the lower directly attributable CAC in this pack?"
+   },
+   "strong_answer": "Partner referral. Its directly attributable CAC is $12,000 per new paying account, compared with $18,000 for paid media. The 38 free trials do not belong in the denominator. Because the pack does not allocate sales salaries, commissions, tools or data by channel, neither figure is fully loaded; on the available channel evidence, the paid-media budget ask should move to partner referral, subject to validating capacity and marginal CAC.",
+   "tests": "Calculating channel-level CAC; excluding free trials from the denominator; distinguishing directly attributable from fully loaded CAC; avoiding a blended figure that hides channel performance; conceding the paid-media ask.",
+   "figures": [
+    {
+     "value": "$1,584,000",
+     "derivation": "Quoted from total Q3 sales and marketing spend."
+    },
+    {
+     "value": "63",
+     "derivation": "Quoted from total new accounts won in Q3."
+    },
+    {
+     "value": "38",
+     "derivation": "Quoted from free trials in flight at 30 September."
+    },
+    {
+     "value": "$432,000",
+     "derivation": "Quoted from Q3 paid media spend."
+    },
+    {
+     "value": "24",
+     "derivation": "Quoted from paid-media new accounts."
+    },
+    {
+     "value": "$216,000",
+     "derivation": "Quoted from Q3 partner and channel fees."
+    },
+    {
+     "value": "18",
+     "derivation": "Quoted from partner-referral new accounts."
+    },
+    {
+     "value": "$576,000",
+     "derivation": "Quoted from Q3 sales salaries and commission."
+    },
+    {
+     "value": "$216,000",
+     "derivation": "Quoted from Q3 tools and data spend."
+    },
+    {
+     "value": "$18,000",
+     "derivation": "$432,000 paid media spend divided by 24 paid-media new accounts."
+    },
+    {
+     "value": "$12,000",
+     "derivation": "$216,000 partner and channel fees divided by 18 partner-referral new accounts."
+    }
+   ]
+  },
+  "audit": {
+   "fabricated": [],
+   "conclusion_stated": false,
+   "conclusion_quote": "",
+   "single_question": true,
+   "opens_on_ask": true,
+   "half_assist_present": true,
+   "verdict": "pass",
+   "reason": "All director-spoken figures are quoted from the pack, no director performs the CAC arithmetic or states its decision implication, and the exchange asks exactly one player-directed question."
+  }
+ },
+ {
+  "slug": "activation-rate",
+  "exchange": {
+   "metric": "Activation rate",
+   "lines": [
+    {
+     "speaker": "Elena",
+     "text": "Your ask is more paid-media budget. The activation evidence is on the table."
+    },
+    {
+     "speaker": "Camille",
+     "text": "September's start cohort was 16 accounts; 10 completed a production workflow within 14 days."
+    },
+    {
+     "speaker": "Ravi",
+     "text": "August was 28 accounts with 21 activated, and July was 19 with 13."
+    },
+    {
+     "speaker": "Camille",
+     "text": "Paid media brought in 4,820 leads and 24 new accounts during the quarter."
+    },
+    {
+     "speaker": "Adrian",
+     "text": "Those figures sit in different tables. The onboarding table is cut by start month, not acquisition channel."
+    }
+   ],
+   "question": {
+    "speaker": "Ravi",
+    "text": "Does this pack establish that paid media activated at a lower rate than partner referral?"
+   },
+   "strong_answer": "No. The monthly activation rates are 68.4% in July, 75% in August and 62.5% in September, but the pack does not split activation by acquisition channel. Join the defined 14-day workflow milestone to CRM source for matured cohorts before changing the paid-media budget on activation grounds.",
+   "tests": "Recognising that monthly activation data cannot establish channel-level activation; calculating cohort rates correctly; refusing an unsupported channel diagnosis; specifying activation by acquisition channel for matured cohorts as the required analysis.",
+   "figures": [
+    {
+     "value": "16",
+     "derivation": "September new accounts, quoted verbatim from the onboarding table."
+    },
+    {
+     "value": "10",
+     "derivation": "September accounts activated within 14 days, quoted verbatim from the onboarding table."
+    },
+    {
+     "value": "14 days",
+     "derivation": "Activation window stated verbatim in the onboarding table note."
+    },
+    {
+     "value": "28",
+     "derivation": "August new accounts, quoted verbatim from the onboarding table."
+    },
+    {
+     "value": "21",
+     "derivation": "August accounts activated within 14 days, quoted verbatim from the onboarding table."
+    },
+    {
+     "value": "19",
+     "derivation": "July new accounts, quoted verbatim from the onboarding table."
+    },
+    {
+     "value": "13",
+     "derivation": "July accounts activated within 14 days, quoted verbatim from the onboarding table."
+    },
+    {
+     "value": "4,820",
+     "derivation": "Paid-media leads, quoted verbatim from the funnel table."
+    },
+    {
+     "value": "24",
+     "derivation": "Paid-media new accounts, quoted verbatim from the new-business table."
+    },
+    {
+     "value": "68.4%",
+     "derivation": "13 activated divided by 19 July new accounts, multiplied by 100 and rounded to one decimal place."
+    },
+    {
+     "value": "75%",
+     "derivation": "21 activated divided by 28 August new accounts, multiplied by 100."
+    },
+    {
+     "value": "62.5%",
+     "derivation": "10 activated divided by 16 September new accounts, multiplied by 100."
+    }
+   ]
+  },
+  "audit": {
+   "fabricated": [],
+   "conclusion_stated": true,
+   "conclusion_quote": "Those figures sit in different tables. The onboarding table is cut by start month, not acquisition channel.",
+   "single_question": true,
+   "opens_on_ask": true,
+   "half_assist_present": true,
+   "verdict": "fail",
+   "reason": "Adrian states the key analytical implication\u2014that the onboarding data cannot support a channel-level activation comparison. This gives away the conclusion, even though all spoken figures are supported by the pack and there is exactly one question."
+  }
+ },
+ {
+  "slug": "ltv-cac-ratio",
+  "exchange": {
+   "metric": "LTV:CAC",
+   "lines": [
+    {
+     "speaker": "Elena",
+     "text": "The request in front of us is more paid-media budget. Paid media had $432,000 of spend, 24 new accounts and $432,000 of new ARR."
+    },
+    {
+     "speaker": "Camille",
+     "text": "Partner and channel fees were $216,000. Partner referral brought 18 new accounts and $540,000 of new ARR."
+    },
+    {
+     "speaker": "Elena",
+     "text": "Sales salaries and commission were $576,000, and tools and data were $216,000."
+    },
+    {
+     "speaker": "Ravi",
+     "text": "Retention is reported for the opening Enterprise, Mid-market and SMB cohorts, not by acquisition channel."
+    },
+    {
+     "speaker": "Camille",
+     "text": "The pack has no paid-media lifetime-value cohort and no marginal cohort."
+    }
+   ],
+   "question": {
+    "speaker": "Adrian",
+    "text": "Can this pack support your paid-media budget increase with a defensible marginal LTV:CAC calculation?"
+   },
+   "strong_answer": "No. The pack supports only a historical, media-only paid CAC of $18,000 per win. It provides neither paid-cohort retention and gross-profit lifetime value nor a channel allocation of sales salaries, commission, tools and data. It also contains no marginal-cohort evidence. Fully loaded CAC and marginal paid-media LTV:CAC therefore cannot be calculated, so the ratio cannot support the increase.",
+   "tests": "Distinguishing media-only from fully loaded CAC; recognizing that channel LTV requires channel-level retention and gross-profit data; distinguishing historical average economics from marginal economics; declining an unsupported budget case.",
+   "figures": [
+    {
+     "value": "$432,000",
+     "derivation": "Paid-media Q3 spend, copied from the sales and marketing spend table."
+    },
+    {
+     "value": "24",
+     "derivation": "Paid-media new accounts, copied from the new business table."
+    },
+    {
+     "value": "$432,000",
+     "derivation": "Paid-media new ARR, copied from the new business table."
+    },
+    {
+     "value": "$216,000",
+     "derivation": "Partner and channel fees, copied from the sales and marketing spend table."
+    },
+    {
+     "value": "18",
+     "derivation": "Partner-referral new accounts, copied from the new business table."
+    },
+    {
+     "value": "$540,000",
+     "derivation": "Partner-referral new ARR, copied from the new business table."
+    },
+    {
+     "value": "$576,000",
+     "derivation": "Sales salaries and commission, copied from the sales and marketing spend table."
+    },
+    {
+     "value": "$216,000",
+     "derivation": "Tools and data, copied from the sales and marketing spend table."
+    },
+    {
+     "value": "$18,000",
+     "derivation": "Historical media-only paid CAC: $432,000 divided by 24 new accounts."
+    }
+   ]
+  },
+  "audit": {
+   "fabricated": [],
+   "conclusion_stated": false,
+   "conclusion_quote": "",
+   "single_question": true,
+   "opens_on_ask": true,
+   "half_assist_present": true,
+   "verdict": "pass",
+   "reason": "All figures spoken by directors are verbatim in the pack. No director performs arithmetic or states the decision implication. The exchange opens with the paid-media budget request and contains exactly one interrogative aimed at the player."
+  }
+ },
+ {
+  "slug": "arpa",
+  "exchange": {
+   "metric": "ARPA / ACV",
+   "lines": [
+    {
+     "speaker": "Elena",
+     "text": "You are asking us to approve additional field-sales headcount. September\u2019s company-wide annualized ARPA was $27,896.10."
+    },
+    {
+     "speaker": "Ravi",
+     "text": "The opening customer book averaged $27,142.86 of ARR per account."
+    },
+    {
+     "speaker": "Camille",
+     "text": "New-account ARPA was $20,000."
+    },
+    {
+     "speaker": "Adrian",
+     "text": "By acquisition channel, paid media was $18,000, partner referral $30,000, and organic and inbound $13,714.29."
+    },
+    {
+     "speaker": "Elena",
+     "text": "The pack does not cut accounts by field-sales ownership."
+    }
+   ],
+   "question": {
+    "speaker": "Camille",
+    "text": "Which ARPA, if any, can you defend as the denominator for the field-sales hiring case from this pack?"
+   },
+   "strong_answer": "None is specific enough to defend the hiring case. The company-wide figure blends the installed base, while new-account and channel ARPA do not identify which accounts were field-sales-owned or which segment the proposed hires would pursue. The case needs realized ARR per account for the target field-sales cohort, using paying billing accounts and net of discounts or credits.",
+   "tests": "Blended versus new-account ARPA; acquisition channel versus sales motion; denominator integrity; recognizing when the pack lacks the required cohort cut.",
+   "figures": [
+    {
+     "value": "$27,896.10",
+     "derivation": "September ending MRR of $1,074,000 \u00d7 12 \u00f7 462 paying accounts = $27,896.103896..., rounded to $27,896.10."
+    },
+    {
+     "value": "$27,142.86",
+     "derivation": "Opening-cohort ARR of $11,400,000 \u00f7 420 opening accounts = $27,142.857142..., rounded to $27,142.86."
+    },
+    {
+     "value": "$20,000",
+     "derivation": "Total new ARR of $1,260,000 \u00f7 63 new accounts = $20,000."
+    },
+    {
+     "value": "$18,000",
+     "derivation": "Paid-media new ARR of $432,000 \u00f7 24 new accounts = $18,000."
+    },
+    {
+     "value": "$30,000",
+     "derivation": "Partner-referral new ARR of $540,000 \u00f7 18 new accounts = $30,000."
+    },
+    {
+     "value": "$13,714.29",
+     "derivation": "Organic-and-inbound new ARR of $288,000 \u00f7 21 new accounts = $13,714.285714..., rounded to $13,714.29."
+    }
+   ]
+  },
+  "audit": {
+   "fabricated": [],
+   "conclusion_stated": false,
+   "conclusion_quote": "",
+   "single_question": true,
+   "opens_on_ask": true,
+   "half_assist_present": true,
+   "verdict": "pass",
+   "reason": "All director figures are correctly derivable from the pack. No director walks through arithmetic or states which ARPA should determine the decision. The exchange opens with the approval ask and contains exactly one question; Elena\u2019s note about the missing field-sales ownership cut provides a half-assist without resolving the question."
+  }
+ },
+ {
+  "slug": "gross-margin",
+  "exchange": {
+   "metric": "Gross margin",
+   "lines": [
+    {
+     "speaker": "Elena",
+     "text": "You're asking us to approve additional paid-media budget. The case is built on gross-margin payback."
+    },
+    {
+     "speaker": "Camille",
+     "text": "The ledger shows 75% gross margin in July, 75% in August, and 75% in September."
+    },
+    {
+     "speaker": "Ravi",
+     "text": "The pack gives us recognised revenue and cost of revenue, but no customer-success allocation rule."
+    },
+    {
+     "speaker": "Elena",
+     "text": "Using the reported margin, paid-media payback is 16 months."
+    },
+    {
+     "speaker": "Camille",
+     "text": "Partner referral is 6.4 months. Organic and inbound is 8 months."
+    }
+   ],
+   "question": {
+    "speaker": "Adrian",
+    "text": "Which channel should receive the additional budget on the reported gross-margin basis?"
+   },
+   "strong_answer": "Partner referral, not paid media. On the reported 75% gross margin, partner payback is 6.4 months, versus 8 months for organic and inbound and 16 months for paid media. The pack does not support an alternative customer-success allocation, so use the reported margin and redirect the ask to partner referral.",
+   "tests": "Calculating gross margin from revenue and cost of revenue; applying gross margin to channel payback; distinguishing reported economics from an unsupported cost-allocation adjustment; conceding and reallocating the original ask.",
+   "figures": [
+    {
+     "value": "75%",
+     "derivation": "July: ($985,000 - $246,250) / $985,000 = 75%; August: ($1,002,000 - $250,500) / $1,002,000 = 75%; September: ($1,021,000 - $255,250) / $1,021,000 = 75%."
+    },
+    {
+     "value": "16 months",
+     "derivation": "Paid-media CAC is $432,000 / 24 = $18,000. ARR per new account is $432,000 / 24 = $18,000; monthly gross profit per account at 75% margin is $18,000 \u00d7 75% / 12 = $1,125. Payback is $18,000 / $1,125 = 16 months."
+    },
+    {
+     "value": "6.4 months",
+     "derivation": "Partner-referral CAC is $216,000 / 18 = $12,000. ARR per new account is $540,000 / 18 = $30,000; monthly gross profit per account at 75% margin is $30,000 \u00d7 75% / 12 = $1,875. Payback is $12,000 / $1,875 = 6.4 months."
+    },
+    {
+     "value": "8 months",
+     "derivation": "For organic and inbound, payback is ($144,000 / 21) / (($288,000 / 21) \u00d7 75% / 12) = 8 months."
+    }
+   ]
+  },
+  "audit": {
+   "fabricated": [],
+   "conclusion_stated": false,
+   "conclusion_quote": "",
+   "single_question": true,
+   "opens_on_ask": true,
+   "half_assist_present": true,
+   "verdict": "pass",
+   "reason": "All spoken figures are correctly derivable from the pack. The directors state calculated metrics but do not walk through arithmetic or state which channel should receive the budget. There is exactly one interrogative aimed at the player, and the exchange opens by naming the approval ask."
+  }
+ },
+ {
+  "slug": "net-revenue-retention",
+  "exchange": {
+   "metric": "Net revenue retention (NRR)",
+   "lines": [
+    {
+     "speaker": "Elena",
+     "text": "You're asking us to approve an increase in acquisition budget."
+    },
+    {
+     "speaker": "Camille",
+     "text": "The opening cohort's Q3 NRR is 102%."
+    },
+    {
+     "speaker": "Ravi",
+     "text": "Gross revenue retention is 94%, and 399 of 420 opening accounts were still active at 30 September."
+    },
+    {
+     "speaker": "Camille",
+     "text": "Expansion was $912,000. The pack does not show its distribution by customer."
+    },
+    {
+     "speaker": "Adrian",
+     "text": "The same cohort had 21 full cancellations and 23 retained accounts that downgraded."
+    }
+   ],
+   "question": {
+    "speaker": "Elena",
+    "text": "Can you establish from this pack that the 102% NRR was not driven by concentrated expansion before we approve the acquisition-budget increase?"
+   },
+   "strong_answer": "No. NRR is 102% and GRR is 94%, so expansion contributes the eight-percentage-point difference. But the $912,000 of expansion is reported only in aggregate, with no customer-level distribution. The pack therefore cannot rule out concentration, so NRR alone cannot support the increase without expansion by customer.",
+   "tests": "Correctly decomposes NRR versus GRR; recognises dollar-weighted concentration risk; refuses to infer customer-level expansion distribution from aggregate data; connects the missing evidence to the budget decision.",
+   "figures": [
+    {
+     "value": "102%",
+     "derivation": "($11,400,000 + $912,000 - $228,000 - $456,000) / $11,400,000 = 102%."
+    },
+    {
+     "value": "94%",
+     "derivation": "($11,400,000 - $228,000 - $456,000) / $11,400,000 = 94%."
+    },
+    {
+     "value": "399",
+     "derivation": "Copied from opening cohort outcomes: total still active at 30 September."
+    },
+    {
+     "value": "420",
+     "derivation": "Copied from the total opening customer cohort at 1 July 2026."
+    },
+    {
+     "value": "$912,000",
+     "derivation": "Copied from Q3 ARR movement: expansion."
+    },
+    {
+     "value": "21",
+     "derivation": "Copied from opening cohort outcomes: total fully cancelled."
+    },
+    {
+     "value": "23",
+     "derivation": "Copied from opening cohort outcomes: total downgraded but retained."
+    },
+    {
+     "value": "eight percentage points",
+     "derivation": "102% NRR - 94% GRR = 8 percentage points."
+    }
+   ]
+  },
+  "audit": {
+   "fabricated": [],
+   "conclusion_stated": false,
+   "conclusion_quote": "",
+   "single_question": true,
+   "opens_on_ask": true,
+   "half_assist_present": true,
+   "verdict": "pass",
+   "reason": "All director-spoken figures are verbatim or correctly derivable from the pack. No director walks through arithmetic or states the figures' implication for the budget decision. The exchange opens with the approval ask and contains exactly one player-directed question."
+  }
+ },
+ {
+  "slug": "gross-revenue-retention",
+  "exchange": {
+   "metric": "Gross revenue retention (GRR)",
+   "lines": [
+    {
+     "speaker": "Elena",
+     "text": "You are asking us to approve an increase in acquisition budget. The opening cohort was $11,400,000, and Q3 gross revenue retention was 94%."
+    },
+    {
+     "speaker": "Camille",
+     "text": "Net revenue retention was 102%."
+    },
+    {
+     "speaker": "Ravi",
+     "text": "Twenty-one of 420 opening accounts cancelled, while 399 remained active at quarter-end."
+    },
+    {
+     "speaker": "Elena",
+     "text": "Expansion was $912,000. The logo retention figure was 95%."
+    }
+   ],
+   "question": {
+    "speaker": "Adrian",
+    "text": "Which retention figure should anchor your case for increasing acquisition spend?"
+   },
+   "strong_answer": "The 94% GRR. It isolates the opening cohort\u2019s $456,000 of churn and $228,000 of contraction without allowing $912,000 of expansion to offset them. The 102% NRR therefore answers a different question, while 95% logo retention weights every account equally despite the segment mix.",
+   "tests": "Distinguishing GRR from NRR and logo retention; excluding expansion; selecting the retention measure that exposes losses in the installed base.",
+   "figures": [
+    {
+     "value": "$11,400,000",
+     "derivation": "Opening-cohort ARR, quoted directly from the board pack."
+    },
+    {
+     "value": "94%",
+     "derivation": "($11,400,000 \u2212 $456,000 \u2212 $228,000) \u00f7 $11,400,000."
+    },
+    {
+     "value": "102%",
+     "derivation": "($11,400,000 + $912,000 \u2212 $456,000 \u2212 $228,000) \u00f7 $11,400,000."
+    },
+    {
+     "value": "21",
+     "derivation": "Opening-cohort cancellations, quoted directly from the board pack."
+    },
+    {
+     "value": "420",
+     "derivation": "Opening-cohort accounts, quoted directly from the board pack."
+    },
+    {
+     "value": "399",
+     "derivation": "Opening-cohort accounts still active at 30 September, quoted directly from the board pack."
+    },
+    {
+     "value": "$912,000",
+     "derivation": "Opening-cohort expansion ARR, quoted directly from the board pack."
+    },
+    {
+     "value": "95%",
+     "derivation": "399 \u00f7 420."
+    },
+    {
+     "value": "$456,000",
+     "derivation": "Opening-cohort churn ARR, quoted directly from the board pack."
+    },
+    {
+     "value": "$228,000",
+     "derivation": "Opening-cohort contraction ARR, quoted directly from the board pack."
+    }
+   ]
+  },
+  "audit": {
+   "fabricated": [],
+   "conclusion_stated": false,
+   "conclusion_quote": "",
+   "single_question": true,
+   "opens_on_ask": true,
+   "half_assist_present": true,
+   "verdict": "pass",
+   "reason": "All director-spoken figures are verbatim or correctly derivable from the pack. No director walks through arithmetic or states which metric should drive the decision. The exchange opens with the approval ask and contains exactly one player-directed question."
+  }
+ },
+ {
+  "slug": "customer-churn-rate",
+  "exchange": {
+   "metric": "Logo churn",
+   "lines": [
+    {
+     "speaker": "Elena",
+     "text": "You\u2019re asking us to approve additional customer-success headcount for SMB coverage. The opening cohort was 420 accounts, and 21 fully cancelled during Q3."
+    },
+    {
+     "speaker": "Camille",
+     "text": "Fourteen of those cancellations were SMB."
+    },
+    {
+     "speaker": "Adrian",
+     "text": "The opening SMB base was 260 accounts. Mid-market lost 6 from an opening base of 118."
+    },
+    {
+     "speaker": "Ravi",
+     "text": "Enterprise lost 1 from 42. Another 23 accounts downgraded but remained active."
+    }
+   ],
+   "question": {
+    "speaker": "Elena",
+    "text": "On logo churn alone, which segment should receive the added coverage?"
+   },
+   "strong_answer": "SMB. Its logo churn was 5.38%, from 14 cancellations among 260 opening accounts, versus 5.08% for Mid-market and 2.38% for Enterprise. That supports SMB as the segment for this logo-churn case, although the pack does not show current CS capacity, so it cannot establish how much headcount to add. The 23 retained downgrades are not logo churn.",
+   "tests": "Start-of-period logo churn by segment; count versus rate; excluding retained downgrades; recognising that the pack lacks CS capacity data.",
+   "figures": [
+    {
+     "value": "420",
+     "derivation": "Copied from the opening cohort total accounts."
+    },
+    {
+     "value": "21",
+     "derivation": "Copied from total fully cancelled accounts during Q3."
+    },
+    {
+     "value": "14",
+     "derivation": "Copied from SMB fully cancelled accounts."
+    },
+    {
+     "value": "260",
+     "derivation": "Copied from opening SMB accounts."
+    },
+    {
+     "value": "6",
+     "derivation": "Copied from Mid-market fully cancelled accounts."
+    },
+    {
+     "value": "118",
+     "derivation": "Copied from opening Mid-market accounts."
+    },
+    {
+     "value": "1",
+     "derivation": "Copied from Enterprise fully cancelled accounts."
+    },
+    {
+     "value": "42",
+     "derivation": "Copied from opening Enterprise accounts."
+    },
+    {
+     "value": "23",
+     "derivation": "Copied from total accounts downgraded but retained."
+    },
+    {
+     "value": "5.38%",
+     "derivation": "14 SMB cancellations divided by 260 opening SMB accounts."
+    },
+    {
+     "value": "5.08%",
+     "derivation": "6 Mid-market cancellations divided by 118 opening Mid-market accounts."
+    },
+    {
+     "value": "2.38%",
+     "derivation": "1 Enterprise cancellation divided by 42 opening Enterprise accounts."
+    }
+   ]
+  },
+  "audit": {
+   "fabricated": [],
+   "conclusion_stated": false,
+   "conclusion_quote": "",
+   "single_question": true,
+   "opens_on_ask": true,
+   "half_assist_present": true,
+   "verdict": "pass",
+   "reason": "All director-spoken figures are verbatim from the pack, no director performs the churn-rate arithmetic or states its decision implication, and there is exactly one question aimed at the player."
+  }
+ },
+ {
+  "slug": "saas-quick-ratio",
+  "exchange": {
+   "metric": "SaaS Quick Ratio",
+   "lines": [
+    {
+     "speaker": "Elena",
+     "text": "You're asking us to approve more paid-media budget. For Q3, the SaaS quick ratio is 3.18."
+    },
+    {
+     "speaker": "Ravi",
+     "text": "September is 3.70. August is 2.86."
+    },
+    {
+     "speaker": "Camille",
+     "text": "Q3 new MRR was $105,000, and expansion MRR was $76,000."
+    },
+    {
+     "speaker": "Elena",
+     "text": "Churn was $38,000, with $19,000 of contraction."
+    },
+    {
+     "speaker": "Adrian",
+     "text": "Paid media closed 24 new accounts for $432,000 of new ARR. The expansion line covers customers already under contract on 1 July."
+    }
+   ],
+   "question": {
+    "speaker": "Camille",
+    "text": "What in the Q3 quick ratio establishes that paid media should receive the additional budget?"
+   },
+   "strong_answer": "Nothing. The 3.18 ratio combines $105,000 of new MRR with $76,000 of expansion MRR and does not attribute either to paid media. Expansion came from existing customers, so it cannot support a paid-acquisition claim. The period also changes the result: August was 2.86 and September was 3.70. Judge the ask using channel economics instead: paid media produced $432,000 of new ARR from 24 accounts on $432,000 of spend, while partner referral produced $540,000 from 18 accounts on $216,000 of spend. The pack supports redirecting the budget rather than increasing paid media.",
+   "tests": "Recognising that the SaaS quick ratio is period-sensitive, combines new and expansion MRR, and cannot establish channel-level acquisition efficiency; bridging from the aggregate ratio to channel economics and conceding the paid-media ask.",
+   "figures": [
+    {
+     "value": "3.18",
+     "derivation": "Q3 SaaS quick ratio: ($105,000 new MRR + $76,000 expansion MRR) divided by ($38,000 churned MRR + $19,000 contraction MRR) = $181,000 divided by $57,000 = 3.18 rounded."
+    },
+    {
+     "value": "3.70",
+     "derivation": "September SaaS quick ratio: ($36,000 + $25,000) divided by ($11,000 + $5,500) = $61,000 divided by $16,500 = 3.70 rounded."
+    },
+    {
+     "value": "2.86",
+     "derivation": "August SaaS quick ratio: ($35,000 + $25,000) divided by ($14,000 + $7,000) = $60,000 divided by $21,000 = 2.86 rounded."
+    },
+    {
+     "value": "$105,000",
+     "derivation": "Q3 new MRR: $34,000 + $35,000 + $36,000."
+    },
+    {
+     "value": "$76,000",
+     "derivation": "Q3 expansion MRR: $26,000 + $25,000 + $25,000."
+    },
+    {
+     "value": "$38,000",
+     "derivation": "Q3 churned MRR: $13,000 + $14,000 + $11,000."
+    },
+    {
+     "value": "$19,000",
+     "derivation": "Q3 contraction MRR: $6,500 + $7,000 + $5,500."
+    },
+    {
+     "value": "24",
+     "derivation": "Copied from paid media new accounts in the Q3 new-business table."
+    },
+    {
+     "value": "$432,000",
+     "derivation": "Copied from paid media new ARR in the Q3 new-business table and paid media Q3 spend in the acquisition-spend table."
+    },
+    {
+     "value": "$540,000",
+     "derivation": "Copied from partner referral new ARR in the Q3 new-business table."
+    },
+    {
+     "value": "18",
+     "derivation": "Copied from partner referral new accounts in the Q3 new-business table."
+    },
+    {
+     "value": "$216,000",
+     "derivation": "Copied from partner and channel fees in the Q3 acquisition-spend table."
+    }
+   ]
+  },
+  "audit": {
+   "fabricated": [],
+   "conclusion_stated": false,
+   "conclusion_quote": "",
+   "single_question": true,
+   "opens_on_ask": true,
+   "half_assist_present": true,
+   "verdict": "pass",
+   "reason": "All spoken figures are verbatim from the pack or correctly derived. No director walks through arithmetic or states the decision implication. The exchange opens with the approval ask and contains exactly one interrogative aimed at the player. Adrian\u2019s clarification about expansion provides a half-assist without resolving the decision."
+  }
+ },
+ {
+  "slug": "cac-payback-period",
+  "exchange": {
+   "metric": "CAC payback period",
+   "lines": [
+    {
+     "speaker": "Elena",
+     "text": "Your ask is approval to shift acquisition budget from paid media to partner referrals."
+    },
+    {
+     "speaker": "Camille",
+     "text": "Paid media spent $432,000 for 24 new accounts and $432,000 of new ARR. Partner referrals spent $216,000 for 18 accounts and $540,000 of new ARR."
+    },
+    {
+     "speaker": "Ravi",
+     "text": "September recognised revenue was $1,021,000 against $255,250 of cost of revenue."
+    },
+    {
+     "speaker": "Adrian",
+     "text": "Sales salaries and commission were $576,000, with another $216,000 in tools and data. Neither line is allocated by channel in this pack."
+    }
+   ],
+   "question": {
+    "speaker": "Camille",
+    "text": "Can you establish from this pack that partner referrals have a shorter fully loaded gross-margin CAC payback than paid media?"
+   },
+   "strong_answer": "No. Using channel-attributed spend and the 75% gross margin, partner referrals show a 6.4-month proxy versus 16 months for paid media. That supports the direction of the shift, but it does not establish fully loaded payback because the pack does not allocate the $792,000 of sales salaries, commission, tools and data between channels.",
+   "tests": "Distinguishes channel-attributed from fully loaded CAC; calculates gross-margin payback correctly; refuses to overclaim when shared acquisition costs lack a channel allocation.",
+   "figures": [
+    {
+     "value": "$432,000",
+     "derivation": "Paid media Q3 spend and paid-media new ARR, both quoted directly from the pack."
+    },
+    {
+     "value": "24",
+     "derivation": "Paid-media new accounts, quoted directly from the pack."
+    },
+    {
+     "value": "$216,000",
+     "derivation": "Partner and channel fees, quoted directly from the pack."
+    },
+    {
+     "value": "18",
+     "derivation": "Partner-referral new accounts, quoted directly from the pack."
+    },
+    {
+     "value": "$540,000",
+     "derivation": "Partner-referral new ARR, quoted directly from the pack."
+    },
+    {
+     "value": "$1,021,000",
+     "derivation": "September recognised revenue, quoted directly from the pack."
+    },
+    {
+     "value": "$255,250",
+     "derivation": "September cost of revenue, quoted directly from the pack."
+    },
+    {
+     "value": "$576,000",
+     "derivation": "Sales salaries and commission, quoted directly from the pack."
+    },
+    {
+     "value": "$216,000",
+     "derivation": "Tools and data spend, quoted directly from the pack."
+    },
+    {
+     "value": "75%",
+     "derivation": "($1,021,000 - $255,250) / $1,021,000 = 75% gross margin."
+    },
+    {
+     "value": "6.4 months",
+     "derivation": "Partner CAC is $216,000 / 18 = $12,000; monthly gross profit per account is ($540,000 / 18 / 12) \u00d7 75% = $1,875; $12,000 / $1,875 = 6.4 months."
+    },
+    {
+     "value": "16 months",
+     "derivation": "Paid CAC is $432,000 / 24 = $18,000; monthly gross profit per account is ($432,000 / 24 / 12) \u00d7 75% = $1,125; $18,000 / $1,125 = 16 months."
+    },
+    {
+     "value": "$792,000",
+     "derivation": "$576,000 of sales salaries and commission + $216,000 of tools and data = $792,000."
+    }
+   ]
+  },
+  "audit": {
+   "fabricated": [],
+   "conclusion_stated": false,
+   "conclusion_quote": "",
+   "single_question": true,
+   "opens_on_ask": true,
+   "half_assist_present": true,
+   "verdict": "pass",
+   "reason": "All director-spoken figures are quoted from the pack, no director performs the payback arithmetic or states its decision implication, and the exchange asks exactly one question."
+  }
+ },
+ {
+  "slug": "customer-acquisition-cost",
+  "exchange": {
+   "metric": "Customer acquisition cost (CAC)",
+   "lines": [
+    {
+     "speaker": "Elena",
+     "text": "You are asking us to approve more acquisition budget for paid media. Q3 paid media spend was $432,000, and it produced 24 new accounts."
+    },
+    {
+     "speaker": "Ravi",
+     "text": "Partner and channel fees were $216,000. Partner referral produced 18 new accounts."
+    },
+    {
+     "speaker": "Camille",
+     "text": "Content and organic cost $144,000, with 21 new accounts from organic and inbound."
+    },
+    {
+     "speaker": "Adrian",
+     "text": "Sales salaries and commission were $576,000, and tools and data were $216,000. The pack does not allocate either line by channel."
+    }
+   ],
+   "question": {
+    "speaker": "Elena",
+    "text": "On the directly attributable spend in the pack, which channel has the lowest CAC?"
+   },
+   "strong_answer": "Organic and inbound, at $6,857.14 per new account, versus $12,000 for partner referral and $18,000 for paid media. Those are direct-spend CACs, not fully loaded channel CACs, because the pack does not allocate sales salaries, commissions, tools or data by channel. They also describe average Q3 economics, not the marginal return from additional budget.",
+   "tests": "Channel-level CAC calculation; use of paying new accounts rather than trials or platform conversions; direct-spend versus fully loaded CAC; recognizing that average CAC does not establish marginal scalability.",
+   "figures": [
+    {
+     "value": "$432,000",
+     "derivation": "Copied from Q3 paid media spend."
+    },
+    {
+     "value": "24",
+     "derivation": "Copied from Q3 paid-media new accounts."
+    },
+    {
+     "value": "$216,000",
+     "derivation": "Copied from Q3 partner and channel fees."
+    },
+    {
+     "value": "18",
+     "derivation": "Copied from Q3 partner-referral new accounts."
+    },
+    {
+     "value": "$144,000",
+     "derivation": "Copied from Q3 content and organic spend."
+    },
+    {
+     "value": "21",
+     "derivation": "Copied from Q3 organic-and-inbound new accounts."
+    },
+    {
+     "value": "$576,000",
+     "derivation": "Copied from Q3 sales salaries and commission."
+    },
+    {
+     "value": "$216,000",
+     "derivation": "Copied from Q3 tools and data spend."
+    },
+    {
+     "value": "$6,857.14",
+     "derivation": "$144,000 divided by 21 new organic-and-inbound accounts."
+    },
+    {
+     "value": "$12,000",
+     "derivation": "$216,000 divided by 18 new partner-referral accounts."
+    },
+    {
+     "value": "$18,000",
+     "derivation": "$432,000 divided by 24 new paid-media accounts."
+    }
+   ]
+  },
+  "audit": {
+   "fabricated": [],
+   "conclusion_stated": false,
+   "conclusion_quote": "",
+   "single_question": true,
+   "opens_on_ask": true,
+   "half_assist_present": true,
+   "verdict": "pass",
+   "reason": "All director-spoken figures appear verbatim in the board pack. No director performs the CAC arithmetic or states its decision implication. The exchange opens with the approval ask and contains exactly one player-directed question; the directors provide the inputs without giving the conclusion."
+  }
+ },
+ {
+  "slug": "activation-rate",
+  "exchange": {
+   "metric": "Activation rate",
+   "lines": [
+    {
+     "speaker": "Adrian",
+     "text": "You are asking this board to approve more paid-media budget."
+    },
+    {
+     "speaker": "Elena",
+     "text": "Paid media spend was $432,000. It produced 24 new accounts from 4,820 leads."
+    },
+    {
+     "speaker": "Camille",
+     "text": "The activation cohorts show 13 of 19 accounts in July, 21 of 28 in August, and 10 of 16 in September."
+    },
+    {
+     "speaker": "Ravi",
+     "text": "Activation here means completing one production workflow within 14 days of starting. The table is cut by start month, not acquisition channel."
+    }
+   ],
+   "question": {
+    "speaker": "Camille",
+    "text": "Which channel can you justify increasing on activation evidence from this pack?"
+   },
+   "strong_answer": "None. The pack reports 44 activations among 63 starts overall, but it does not join activation outcomes to paid media, partner referral, or organic and inbound. Channel activation rates using the same 14-day definition are required before activation evidence can support the allocation.",
+   "tests": "Recognising that aggregate activation cannot rank acquisition channels; maintaining a consistent activation event and window; declining to make an unsupported channel attribution.",
+   "figures": [
+    {
+     "value": "$432,000",
+     "derivation": "Copied from Q3 paid media spend."
+    },
+    {
+     "value": "24",
+     "derivation": "Copied from paid media new accounts and closed won."
+    },
+    {
+     "value": "4,820",
+     "derivation": "Copied from paid media leads."
+    },
+    {
+     "value": "13",
+     "derivation": "Copied from July accounts activated within 14 days."
+    },
+    {
+     "value": "19",
+     "derivation": "Copied from July new accounts."
+    },
+    {
+     "value": "21",
+     "derivation": "Copied from August accounts activated within 14 days."
+    },
+    {
+     "value": "28",
+     "derivation": "Copied from August new accounts."
+    },
+    {
+     "value": "10",
+     "derivation": "Copied from September accounts activated within 14 days."
+    },
+    {
+     "value": "16",
+     "derivation": "Copied from September new accounts."
+    },
+    {
+     "value": "14 days",
+     "derivation": "Copied from the onboarding activation definition."
+    },
+    {
+     "value": "44",
+     "derivation": "13 + 21 + 10 activated accounts."
+    },
+    {
+     "value": "63",
+     "derivation": "19 + 28 + 16 new accounts; also matches the Q3 new-business total."
+    }
+   ]
+  },
+  "audit": {
+   "fabricated": [],
+   "conclusion_stated": false,
+   "conclusion_quote": "",
+   "single_question": true,
+   "opens_on_ask": true,
+   "half_assist_present": true,
+   "verdict": "pass",
+   "reason": "All director-spoken figures are verbatim from the pack. The directors provide relevant aggregate activation data and identify that it is not segmented by acquisition channel, but they do not calculate an activation rate or state the decision implication. The exchange opens with the approval ask and contains exactly one question to the player."
+  }
+ },
+ {
+  "slug": "ltv-cac-ratio",
+  "exchange": {
+   "metric": "Gross-profit LTV:CAC by acquisition channel",
+   "lines": [
+    {
+     "speaker": "Elena",
+     "text": "You're asking us to approve moving acquisition budget into partner referrals. Paid media spent $432,000 and won 24 accounts; partner and channel fees were $216,000 and partner referral won 18."
+    },
+    {
+     "speaker": "Ravi",
+     "text": "The channel-only CACs are $18,000 for paid and $12,000 for partner. New ARR per account was $18,000 and $30,000, respectively."
+    },
+    {
+     "speaker": "Camille",
+     "text": "Sales salaries and commission were $576,000, and tools and data were $216,000. The pack does not allocate either by channel."
+    },
+    {
+     "speaker": "Adrian",
+     "text": "Gross margin was 75% in each month, but retention is not reported by acquisition channel."
+    }
+   ],
+   "question": {
+    "speaker": "Adrian",
+    "text": "Can you establish from this pack that partner referral has a higher gross-profit LTV:CAC than paid media?"
+   },
+   "strong_answer": "No. The pack supports channel-only CAC proxies and new ARR per account, but not channel LTV:CAC. It provides no retention or realized gross profit by acquisition channel, and it does not allocate shared sales salaries, commission, tools or data by channel. Neither channel-level LTV nor fully loaded CAC is established, so the ranking cannot be made from this pack.",
+   "tests": "Recognising that ARR per account is not LTV; distinguishing channel-only from fully loaded CAC; refusing to rank channels without channel-level retention and cost allocation.",
+   "figures": [
+    {
+     "value": "$432,000",
+     "derivation": "Copied from paid media spend and paid-media new ARR in the board pack."
+    },
+    {
+     "value": "24",
+     "derivation": "Copied from paid-media new accounts in the board pack."
+    },
+    {
+     "value": "$216,000",
+     "derivation": "Copied from partner and channel fees; the same amount is separately reported for tools and data."
+    },
+    {
+     "value": "18",
+     "derivation": "Copied from partner-referral new accounts in the board pack."
+    },
+    {
+     "value": "$18,000",
+     "derivation": "Paid channel-only CAC is $432,000 divided by 24; paid new ARR per account is also $432,000 divided by 24."
+    },
+    {
+     "value": "$12,000",
+     "derivation": "$216,000 of partner and channel fees divided by 18 partner-referral accounts."
+    },
+    {
+     "value": "$30,000",
+     "derivation": "$540,000 of partner-referral new ARR divided by 18 accounts."
+    },
+    {
+     "value": "$576,000",
+     "derivation": "Copied from sales salaries and commission in the board pack."
+    },
+    {
+     "value": "75%",
+     "derivation": "Gross margin in each month: recognised revenue less cost of revenue, divided by recognised revenue."
+    }
+   ]
+  },
+  "audit": {
+   "fabricated": [],
+   "conclusion_stated": false,
+   "conclusion_quote": "",
+   "single_question": true,
+   "opens_on_ask": true,
+   "half_assist_present": true,
+   "verdict": "pass",
+   "reason": "All director-spoken figures are verbatim or correctly derivable from the pack. No director walks through arithmetic or states what the figures imply for the decision. There is exactly one interrogative aimed at the player, and the exchange opens by naming the requested budget shift."
+  }
+ },
+ {
+  "slug": "arpa",
+  "exchange": {
+   "metric": "Average revenue per account (ARPA)",
+   "lines": [
+    {
+     "speaker": "Elena",
+     "text": "You\u2019re asking us to approve moving acquisition budget out of paid media and into partner referrals."
+    },
+    {
+     "speaker": "Camille",
+     "text": "The opening book averaged $27,143 in ARR per account."
+    },
+    {
+     "speaker": "Ravi",
+     "text": "That was the opening cohort. Q3 new business averaged $20,000 per account."
+    },
+    {
+     "speaker": "Elena",
+     "text": "Paid media brought in $18,000 per new account. Partner referral brought in $30,000."
+    },
+    {
+     "speaker": "Camille",
+     "text": "The plan mix is 44 Enterprise accounts, 121 Growth and 297 Starter. One blended average is doing a lot of work there."
+    }
+   ],
+   "question": {
+    "speaker": "Adrian",
+    "text": "Which ARPA should anchor the payback case for the budget shift?"
+   },
+   "strong_answer": "Use the $30,000 annual new-account ARPA from partner referrals because it matches the marginal cohort the shifted budget would acquire. Do not use the $27,143 opening-book average or the $20,000 blended new-business average. The pack does not provide channel-level credits or contra-revenue, so net partner ARPA still needs validation.",
+   "tests": "Channel-level versus blended ARPA; new-customer versus installed-base ARPA; segment-mix awareness; recognising when net ARPA cannot be established from the pack.",
+   "figures": [
+    {
+     "value": "$27,143",
+     "derivation": "Opening-cohort ARR of $11,400,000 divided by 420 opening accounts equals $27,142.86, rounded to $27,143."
+    },
+    {
+     "value": "$20,000",
+     "derivation": "Total Q3 new ARR of $1,260,000 divided by 63 new accounts."
+    },
+    {
+     "value": "$18,000",
+     "derivation": "Paid-media new ARR of $432,000 divided by 24 new accounts."
+    },
+    {
+     "value": "$30,000",
+     "derivation": "Partner-referral new ARR of $540,000 divided by 18 new accounts."
+    },
+    {
+     "value": "44",
+     "derivation": "Copied from the 30 September Enterprise plan account count."
+    },
+    {
+     "value": "121",
+     "derivation": "Copied from the 30 September Growth plan account count."
+    },
+    {
+     "value": "297",
+     "derivation": "Copied from the 30 September Starter plan account count."
+    }
+   ]
+  },
+  "audit": {
+   "fabricated": [],
+   "conclusion_stated": false,
+   "conclusion_quote": "",
+   "single_question": true,
+   "opens_on_ask": true,
+   "half_assist_present": true,
+   "verdict": "pass",
+   "reason": "All spoken figures are verbatim or correctly derivable from the pack. No director walks through arithmetic or states which ARPA should drive the decision. There is exactly one player-directed question, and the exchange opens with the approval ask."
+  }
+ },
+ {
+  "slug": "gross-margin",
+  "exchange": {
+   "metric": "Gross margin",
+   "lines": [
+    {
+     "speaker": "Elena",
+     "text": "Your ask is approval for more paid-media budget. Q3 gross margin was 75%."
+    },
+    {
+     "speaker": "Ravi",
+     "text": "Paid media took $432,000 and won 24 accounts."
+    },
+    {
+     "speaker": "Camille",
+     "text": "Partner referral took $216,000 and won 18 accounts. Organic and inbound took $144,000 and won 21."
+    },
+    {
+     "speaker": "Elena",
+     "text": "On a gross-margin basis, paid-media payback was 16 months. Partner referral was 6.4 months, and organic and inbound was 8 months."
+    }
+   ],
+   "question": {
+    "speaker": "Adrian",
+    "text": "Which channel should receive the incremental acquisition budget?"
+   },
+   "strong_answer": "Partner referral. At 75% gross margin, its 6.4-month payback beats organic and inbound at 8 months and paid media at 16 months, so the paid-media ask should be reallocated.",
+   "tests": "Converting revenue economics to gross-profit payback; comparing channel-level acquisition economics; conceding and reallocating the ask.",
+   "figures": [
+    {
+     "value": "75%",
+     "derivation": "Q3 recognised revenue was $3,008,000 and cost of revenue was $752,000; ($3,008,000 - $752,000) / $3,008,000 = 75%."
+    },
+    {
+     "value": "$432,000",
+     "derivation": "Paid-media Q3 spend, copied from the board pack."
+    },
+    {
+     "value": "24",
+     "derivation": "Paid-media new accounts, copied from the board pack."
+    },
+    {
+     "value": "$216,000",
+     "derivation": "Partner and channel fees, copied from the board pack."
+    },
+    {
+     "value": "18",
+     "derivation": "Partner-referral new accounts, copied from the board pack."
+    },
+    {
+     "value": "$144,000",
+     "derivation": "Content and organic Q3 spend, copied from the board pack."
+    },
+    {
+     "value": "21",
+     "derivation": "Organic-and-inbound new accounts, copied from the board pack."
+    },
+    {
+     "value": "16 months",
+     "derivation": "Paid-media CAC is $432,000 / 24 = $18,000; ARR per account is $432,000 / 24 = $18,000; gross-profit ARR is $13,500 at 75% margin; $18,000 / ($13,500 / 12) = 16 months."
+    },
+    {
+     "value": "6.4 months",
+     "derivation": "Partner CAC is $216,000 / 18 = $12,000; ARR per account is $540,000 / 18 = $30,000; gross-profit ARR is $22,500 at 75% margin; $12,000 / ($22,500 / 12) = 6.4 months."
+    },
+    {
+     "value": "8 months",
+     "derivation": "Organic CAC is $144,000 / 21; ARR per account is $288,000 / 21; applying 75% gross margin and annualising gives payback of 8 months."
+    }
+   ]
+  },
+  "audit": {
+   "fabricated": [],
+   "conclusion_stated": false,
+   "conclusion_quote": "",
+   "single_question": true,
+   "opens_on_ask": true,
+   "half_assist_present": true,
+   "verdict": "pass",
+   "reason": "All spoken figures are verbatim or correctly derivable from the pack. The directors provide relevant economics without stating which channel should receive the budget, and Adrian asks exactly one question."
+  }
+ }
+]
