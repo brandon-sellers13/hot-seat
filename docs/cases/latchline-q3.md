@@ -1,328 +1,416 @@
 ---
 title: "Case 01 — Latchline, Q3 board meeting"
 type: case
-status: draft
+status: draft-2
 date: 2026-07-31
-for: docs/plans/2026-07-31-001-feat-hot-seat-narrative-plan.md
+supersedes_draft: draft-1 (2026-07-31)
+reviews: docs/reviews/2026-07-31-latchline-case-adversarial.md
 ---
 
 # Latchline, Q3
 
-The first authored case. Written to be paper-playtested before any code, because
-it decides things the plan cannot answer on its own: whether random card
-selection survives, what state the engine must track, and what grading means
-once the board has motives.
+Second draft. The first was reviewed and returned FIX FIRST: the finance chain
+did not hold, and the central design claim was asserted rather than built. Both
+are addressed below, and the specific corrections are listed at the end so the
+next reviewer can check them rather than take my word.
 
-## The design claim this case is testing
+## The design claim, and how it is now enforced
 
-**Metric knowledge is the investigative tool.**
+**Metric knowledge is the investigative tool.** Draft 1 asserted this and did not
+implement it: the mechanic only checked whether the player produced the right
+document, which a novice can do by genre convention. Finance-looking paper when
+the CFO speaks, chart when the product lead speaks.
 
-This is the whole bet, and it is what keeps recall fluency as objective number
-one while still producing a mystery. You cannot find the fraud without knowing
-how the metrics are constructed:
+The mechanic is now **make a case**, and it has three mandatory parts:
 
-- You only catch the inflated retention if you know net revenue retention counts
-  a customer as retained on contract status, not on cash received, and that a
-  free extension is therefore invisible in it.
-- You only reject the "lead quality" story if you know activation sits upstream
-  of retention, and that a cohort defined after a product change cannot be
-  compared to one defined before it.
-- You only unpick the attribution claim if you know what a view-through window
-  does to marketing-sourced pipeline.
+1. **Claim.** What assertion is false or unsupported.
+2. **Records.** Which specific records establish it.
+3. **Warrant.** How the metric's construction makes those records contradictory,
+   with the corrected figure where one can be computed.
 
-Every question the board asks is still a real question about a real corpus card,
-graded against that card's facets exactly as now. What changes is that the
-question comes from somebody with a reason to ask it, in an order that matters.
+Records without a warrant do not advance the case. This is the difference
+between the two drafts, and it is the whole design.
 
-**The corpus supplies the substance. The case supplies the order, the stakes and
-the motive.** If a playtest shows the case is carrying the interest and the
-metrics are incidental, the design has failed and should be thrown away.
+The warrant is not a new system. It is the board-answer rubric already built and
+running in production: anchor a number you can source, then say what it means.
+The existing grading spine scores exactly this shape.
+
+**Records are raw.** No exhibit is named after its own conclusion. There is no
+"export showing the source was changed". There is a field-history table, and the
+player has to read it and know what they are looking at.
+
+## The mechanic, per exchange
+
+- **Answer.** Respond to the question. Graded against the corpus card as now.
+- **Request.** Ask for a specific record or reconciliation. Requests are driven
+  by hypothesis, not by act number. Three per meeting. A vague request returns a
+  useless record.
+- **Press.** One return question to force a disclosure. Three per meeting.
+- **Make a case.** Claim plus records plus warrant. A case with records but no
+  warrant is refused and costs nothing. A case with a wrong claim costs
+  credibility.
+
+Answering everything correctly and never making a case is a good score and the
+worst ending, because the six million is approved anyway.
 
 ## Cold open
 
-> **8:10 a.m. Fifty minutes before the Q3 board meeting.**
+> **8:10 a.m., fifty minutes before the Q3 board meeting.**
 >
-> Mara Velez, Latchline's CMO, has resigned. Adrian is telling people it was for
-> personal reasons.
+> Mara Velez, Latchline's CMO, has resigned. Adrian is telling people it was
+> personal.
 >
-> Her last message to you, sent at 07:58, reads in full:
+> Her last message to you, 07:58, in full:
 >
-> > *"Don't certify slide 17. I'm sorry. You'll work out why."*
+> > *"I couldn't sign the rep letter. Ask Elena what's in the ending ARR."*
 >
-> You are VP of Marketing. Slide 17 says Latchline closed Q3 at 101% of target
-> with net revenue retention of 120%. The board is meeting to approve six million
-> dollars of additional acquisition spend, on the stated basis that lead quality
-> is the constraint on growth.
+> You are VP of Marketing. The board is approving six million dollars to move
+> budget out of partner and into paid acquisition, on the basis that partner
+> pipeline has weakened and paid is carrying the quarter.
 >
-> At 8:31, Priya Shah, the analytics lead you hired six months ago, sends you a
-> one-line message: *"Cash doesn't tie to the retention number. I've got the
-> reconciliation. Do you want it before you go in?"*
+> Priya Shah, your analytics lead, at 8:31: *"Something's off in the retention
+> roll-forward. I can pull it, but if I put my name on it, it's my name on it."*
 
-The player takes one exhibit into the room. That is the first decision and it is
-made before anybody has spoken.
+The player takes **one** record into the room, and decides whether Priya's
+analysis goes in **named** or **anonymous**. Named carries weight with the audit
+committee and exposes her. Anonymous is easier for Adrian to dismiss as
+unsourced, and keeps her out of it.
+
+### Hypotheses available at the open
+
+The opening deliberately supports several explanations. Only two are live.
+
+| Hypothesis | Live? |
+|---|---|
+| Collections or invoice timing | no, and the records will say so |
+| Billing-system migration artefact | no |
+| Contract amendments held at prior value | **yes** |
+| Cohort maturity, later cohorts not yet renewed | no |
+| Channel mix shifting toward weaker sources | no, and disproving it matters |
+| Product regression suppressing renewals | **yes** |
+
+A player who requests a collections ageing report gets one, learns nothing, and
+has spent a request. That is the intended cost of an untested hypothesis.
 
 ## What actually happened
 
-The board believes: growth is fine, retention is excellent, marketing is not
-generating enough qualified pipeline, so buy more.
+Latchline sells annual contracts. ARR at 1 July was $10.0M.
 
-The truth, in causal order:
+1. **Week 2 of Q3, Ravi forces a mandatory workspace migration** into production
+   with no staged rollout, over Priya's written objection. Every existing
+   customer has to reconnect their production data source and re-run one
+   workflow before the old configuration stops working.
+2. **Migration completion collapses.** 68% of accounts completed the equivalent
+   step before the change; 31% after. A feature-flagged holdout of 12% of
+   accounts was never migrated and stayed at 67%.
+3. Accounts that never completed lost their integrations and stopped getting
+   value. **31 of them had annual terms expiring during Q3 and did not renew.**
+   They are members of the opening cohort, so they bear on Q3 retention.
+4. **RevOps issued no-cost 90-day bridge amendments**: `service_end_date` pushed
+   out ninety days, `current_arr` left at the prior paid amount, status left
+   `active`.
+5. Latchline's written ARR policy counts only **executed paid order forms**.
+   Bridge periods without a paid renewal are excluded. The retention dashboard
+   does not implement that rule; it includes any account with `status = active`
+   and a non-null `current_arr`.
+6. **$1.2M of expired ARR therefore stays in ending ARR.**
+7. Separately, the quarter's largest deal, **Corven Logistics at $840k**, had
+   `original_opportunity_source` changed from `partner_referral` to
+   `paid_display` eleven days after close, by a bulk update that copied the
+   agency's `campaign_influence` value into the primary source field.
+8. The agency is run by Camille's former deputy. Camille sponsored the contract.
+9. **Adrian signed a management certificate** for the growth-debt draw
+   representing NRR at or above 115%. A restatement breaches it.
+10. If pressed, Adrian's plan is to call it a dashboard reconciliation error by
+    Priya.
 
-1. In week two of Q3, Ravi forced a new onboarding flow into production with no
-   staged rollout, over Priya's written objection.
-2. Activation fell from 68% to 31% for every cohort that landed after the
-   release. New customers never reached first value.
-3. Those accounts were heading for non-renewal inside the quarter.
-4. Elena granted 90-day free extensions to 31 of them and left them classified as
-   retained, because a renewal that has not formally lapsed is still a live
-   contract.
-5. Net revenue retention therefore reads 120%. Gross revenue retention, which
-   cannot be rescued by expansion, is the number nobody has put on a slide.
-6. Separately, the quarter's largest deal had its source field changed from
-   `partner referral` to `paid search` eleven days after close, which is what
-   makes acquisition look productive enough to deserve six million more.
-7. The agency whose attribution model produced that reclassification is run by
-   Camille's former deputy. Camille sponsored the contract and defended its
-   30-day view-through window at the last board meeting.
-8. Adrian promised 120% net revenue retention in a side letter to the incoming
-   investor. A restatement breaches a financing condition.
-9. Adrian's plan, if pressed, is to attribute the discrepancy to a "dashboard
-   reconciliation error" by Priya.
+### The reconciliation
 
-**The board is about to spend six million dollars fixing the wrong problem.**
+| | $M |
+|---|---|
+| Opening cohort ARR, 1 July | 10.0 |
+| Expansion | +2.4 |
+| Genuine contraction and churn | −0.4 |
+| **Reported ending cohort ARR** | **12.0** |
+| Bridge ARR with no executed paid renewal | −1.2 |
+| **Policy-compliant ending cohort ARR** | **10.8** |
+
+**Reported NRR 120%. Policy-compliant NRR 108%.**
+
+Gross revenue retention is a **separate** diagnostic, not the same tell. Reported
+GRR is 96%; policy-compliant GRR is 84%. Both are inflated by the bridges,
+because the dashboard preserves the ARR in each. What GRR shows independently is
+that expansion is masking a real retention problem even before the bridges are
+corrected. A player who reaches for GRR expecting it to expose the bridges is
+half right and should be told why.
+
+### Why the attribution change matters to the decision
+
+The board's threshold for paid acquisition is an 18-month CAC payback.
+
+| | Paid new ARR | Payback | Verdict |
+|---|---|---|---|
+| Corven counted as paid | $1.95M | 11.0 months | passes |
+| Corven correctly partner-sourced | $1.11M | 19.4 months | fails |
+
+Paid spend $1.40M, gross margin 78%. **The reclassification is the only reason
+the six million looks justified.** Without it the board is moving budget out of
+the channel that works and into the one that does not.
 
 ## The room
 
-Four people. Each owns a different piece of the failure, which is why their
-questions come from somewhere rather than from a topic list.
+### Elena Ruiz, CFO
+**Wants** the debt draw closed without a formal restatement.
+**Flaw** treats reconcilable-later as true-now; retreats into definitions.
+**Habit** *"Take me from logo to cash."* Writes her preferred number in the
+margin before you finish.
+**Personal** she approved the bridge amendments and the classification.
 
-### Elena Ruiz, Chief Financial Officer
+### Ravi Sethi, founder and CPO
+**Wants** the quarter blamed on lead quality; the migration left in production.
+**Flaw** demands cohort rigour of others, cherry-picks his own.
+**Habit** *"Show me the cohort, not the average."* Peels the label off his water
+bottle.
+**Personal** he overrode the staged rollout in writing.
 
-**Wants:** the term sheet signed without formally restating retention.
-**Flaw:** treats "reconcilable later" as equivalent to true now. Under pressure
-she retreats into definitions rather than intent.
-**Habit:** says *"Take me from logo to cash"* and writes her preferred number in
-the margin before you have finished answering.
-**Why it is personal:** she approved the 31 extensions herself and signed off
-classifying them as active renewals.
-**Attacks:** definitional precision, cash timing, anything where a metric can be
-constructed two ways.
+### Camille Ward, independent director, ex-growth operator
+**Wants** budget into paid; the attribution model unexamined.
+**Flaw** fills uncertainty with benchmarks from companies that are not this one.
+**Habit** interrupts with *"At what scale?"*, taps her pen three times.
+**Personal** her former deputy runs the agency. She sponsored the contract. This
+is the seat that states a fabricated benchmark as fact.
 
-### Ravi Sethi, founder and Chief Product Officer
+### Adrian Cole, CEO and chair
+**Wants** unanimous approval and a compliant CMO.
+**Flaw** uses warmth as coercion; arranges for others to say the false thing.
+**Habit** *"Help me tell the simple story."* Straightens the place cards.
+**Personal** the management certificate, and his voting control.
 
-**Wants:** the quarter blamed on lead quality, and his onboarding flow left in
-production.
-**Flaw:** mistakes ownership for expertise. Demands cohort rigour from everyone
-else and cherry-picks his own.
-**Habit:** says *"Show me the cohort, not the average"*, then rejects any cohort
-that makes his release look bad. Peels the label off his water bottle while
-listening.
-**Why it is personal:** he overrode a staged rollout. The activation collapse
-begins forty-eight hours after his release.
-**Attacks:** lead quality, cohort definitions, top-of-funnel intent.
+### Post-revelation tactics
 
-### Camille Ward, independent director, former growth operator
+Behaviour changes with story state. This is scripted, not an expression swap.
 
-**Wants:** next quarter's budget moved into performance media, without anybody
-examining the attribution model.
-**Flaw:** equates speed with competence, and fills uncertainty with borrowed
-benchmarks from companies that are not this one.
-**Habit:** interrupts with *"At what scale?"* and taps her pen three times when
-she thinks an answer is too slow.
-**Why it is personal:** her former deputy founded the agency that received the
-disputed attribution credit. She sponsored the contract.
-**Attacks:** spend allocation, efficiency ratios, benchmark comparisons. This is
-the seat that quotes a fabricated benchmark as fact.
+| When | Change |
+|---|---|
+| `nrr_restated_case_made` | Elena stops defending the headline and attacks the migration evidence instead. Adrian immediately proposes the classification was an operational error at Priya's level. |
+| `migration_identified` | Ravi drops lead quality and argues the activation definition changed mid-quarter. If that fails he offers up Elena's bridge approvals to protect the rollout. |
+| `attribution_case_made` | Camille reframes sourced as influenced. She recuses only if the contract and the user audit are connected in one case. |
+| `priya_named` | Adrian withdraws the public offer and makes a private one, conditional on calling the error immaterial until the draw closes. |
+| player certified early | Elena quotes the player's own endorsement back at them on any later reversal. |
 
-### Adrian Cole, Chief Executive and chair
+## Records
 
-**Wants:** unanimous approval, and the player installed as CMO inside the
-existing story.
-**Flaw:** uses warmth as coercion. Avoids lying directly by arranging for other
-people to say the thing.
-**Habit:** opens his hardest questions with *"Help me tell the simple story."*
-When cornered he asks somebody else to answer, and straightens the place cards.
-**Why it is personal:** the side letter, and his voting control.
-**Attacks:** nothing, on the surface. He converts disputed facts into
-"leadership judgment" and offers the promotion at the exact moment it is most
-expensive to refuse.
+Raw. None is named after its conclusion. Obtained by request unless marked.
 
-## Exhibits
+| # | Record | How obtained |
+|---|---|---|
+| R1 | Board deck slide 17 | held |
+| R2 | Mara's message | held |
+| R3 | Retention roll-forward, opening cohort, account level: opening ARR, expansion, contraction, ending ARR, status | Priya, named or anonymous |
+| R4 | ARR recognition policy, clause 4.2 | request |
+| R5 | Contract amendment log, Q3: type, effective date, consideration | request |
+| R6 | Renewal bookings register: executed paid order forms, Q3 | request |
+| R7 | Workflow completion by weekly cohort, segmented by acquisition source, with migration-exposure flag | request, after a product hypothesis |
+| R8 | Release ticket LTC-2291 with review comments | request, after R7 |
+| R9 | CRM field history, OPP-4471 (Corven) | request |
+| R10 | Attribution policy and agency statement of work, pages 1 and 4 | request, after R9 |
+| R11 | Management certificate, growth-debt draw, schedule 2 | request, after the NRR case lands |
+| R12 | Collections ageing report | request — returns nothing, costs a request |
 
-The player holds these. Some arrive mid-meeting.
+## The three cases, and their required warrants
 
-| # | Exhibit | Held from | What it proves |
-|---|---|---|---|
-| E1 | Slide 17 | start | The claim: 101% of target, 120% NRR |
-| E2 | Mara's resignation message | start | Somebody who saw the books refused to certify it |
-| E3 | Cash receipts against reported retained ARR | opening choice | The two do not tie |
-| E4 | Retained-logo list, annotated | after contradiction 1 | 31 accounts on free 90-day extensions |
-| E5 | Activation by weekly cohort | after contradiction 1 | 68% to 31%, breaking at the release |
-| E6 | Ravi's release note, with Priya's objection | Act 2 | The rollout was forced, and the objection was written down |
-| E7 | CRM field-history export | Act 3 | Source changed 11 days after close |
-| E8 | Agency contract, first page | Act 3 | 30-day view-through, sponsor named |
+A case advances only with all three parts. The facilitator answer key is exact.
 
-## The loop, per exchange
+### Case A — ending ARR includes unrenewed contracts
 
-Three actions. This is the change that makes it a game rather than an oral exam.
+**Claim** Reported NRR overstates retention because ending ARR includes accounts
+with no executed paid renewal.
+**Records** R3 with R4, R5 and R6.
+**Warrant, required elements**
+- The 31 accounts are in the **opening cohort**, so they bear on Q3 NRR.
+- Their paid terms **expired within Q3**.
+- The amendments carry **no consideration**, so under policy 4.2 the ARR is not
+  recognisable.
+- The dashboard retains it because it keys on **status, not on an executed order
+  form**.
+- **Corrected ending ARR $10.8M, NRR 108%, not 120%.**
 
-1. **Answer.** Respond to the question. Graded against the corpus card exactly as
-   today, on the board-answer rubric. This is still the spine and still most of
-   what happens.
-2. **Press.** One return question, to make somebody disclose. Limited to three
-   per meeting. A press aimed at the wrong person wastes it.
-3. **Present.** Put an exhibit against a claim just made. This is the Ace
-   Attorney move. Correct, and the case advances. Wrong, and it costs
-   credibility, because accusing a director with the wrong document in your hand
-   is exactly as bad in the fiction as it is in life.
+**Refused if** the player offers cash-versus-ARR as the contradiction. Elena is
+correct that cash and ARR diverge for ordinary reasons, and the facilitator says
+so. This is the trap for the player who half-knows the metric.
 
-**Answering well is necessary and not sufficient.** A player who answers every
-question correctly and never presents anything gets a good performance score and
-the worst available ending, because the six million is still approved. That
-asymmetry is the whole point and should be felt on the first playthrough.
+### Case B — the collapse is the migration, not the leads
 
-## The three contradictions
+**Claim** Retention fell because of the migration, not lead quality, so more
+acquisition spend does not address it.
+**Records** R7 with R8.
+**Warrant, required elements**
+- Activation event and **fixed observation window** named.
+- **Only matured cohorts** compared, so the drop is not right-censoring.
+- The fall holds **within each acquisition source**, which rules out mix.
+- The **unmigrated holdout stays at 67%**, which is the controlled comparison.
+- The exposed accounts are the same accounts as in Case A.
 
-Each is mandatory to advance the causal chain. Each requires knowing a metric
-properly, which is the design claim in action.
+**Refused if** the player argues only that activation sits upstream of retention.
+True and insufficient: low-intent leads also produce low activation. Without the
+holdout it is correlation.
 
-### Contradiction 1 — retention cannot be both
+### Case C — sourced is not influenced
 
-**Claim (Elena, Act 1):** "Retention is 120%. It is the strongest number on the
-page."
-**Present:** E3, cash receipts against reported retained ARR.
-**Metric you must know:** net revenue retention counts contract status, not cash.
-A live contract generating no cash is still retained.
-**Forces:** Elena concedes a "timing difference", which produces E4.
+**Claim** Paid CAC payback passes only because a partner-sourced deal was
+reclassified after close.
+**Records** R9 with R10.
+**Warrant, required elements**
+- `original_opportunity_source` is frozen at creation; `campaign_influence` is
+  not the same field and is not interchangeable.
+- The agency's window is **impression-through on display**, which supports an
+  influence claim and not a source claim.
+- The change is **post-close**, by bulk update.
+- **Payback moves from 11.0 to 19.4 months, through the 18-month threshold.**
 
-### Contradiction 2 — the collapse has a date
+**Refused if** the player only shows the field changed. That proves someone
+edited a record, not that the metric is wrong.
 
-**Claim (Ravi, Act 2):** "This is a lead quality problem. The cohorts we bought
-in Q3 were weaker."
-**Present:** E5 against E6, activation by cohort against the release note.
-**Metric you must know:** activation sits upstream of retention, and a cohort
-boundary drawn after a product change cannot be compared with one drawn before
-it.
-**Forces:** Ravi has to defend the rollout rather than the lead source, and the
-room's diagnosis moves off marketing.
+## The run
 
-### Contradiction 3 — the source was changed
+Twelve exchanges. Complete script: every question, the card in play, the
+expected answer, press targets and responses, and what a case here requires.
+Short meeting is exchanges 1-6 and the vote.
 
-**Claim (Camille, Act 3):** "Paid is carrying pipeline. The largest deal of the
-quarter is marketing-sourced. That is what the six million buys more of."
-**Present:** E7, the CRM field history.
-**Metric you must know:** what a view-through window does to sourced pipeline,
-and that source is assigned at creation, not at close.
-**Forces:** the attribution model itself comes under scrutiny, which surfaces E8
-and Camille's conflict.
+**Credibility** starts at 5. Refused case 0. Wrong claim −1. Accepting a false
+figure when the records to refute it are in hand −2. At 0 the chair moves on and
+the player watches the rest.
 
-## Act structure
+---
 
-**Act 1, exchanges 1-7. The number that cannot be true.**
-Elena leads. Questions run on retention construction, churn, and cash. Adrian
-offers the promotion early and warmly, before the player knows what it costs.
-Ends on contradiction 1 or on Elena closing the topic unchallenged.
+**1. Adrian opens.** *"Help me tell the simple story. Best quarter we have had.
+Where did it come from?"*
+Card `net-revenue-retention` / application. No case available.
+*Adrian offers the CMO seat here, warmly, before anything is known.*
 
-**Act 2, exchanges 8-14. Where it actually broke.**
-Ravi leads, defending lead quality. Questions run on activation, onboarding,
-cohort construction and the retention drivers. Ends on contradiction 2, or on the
-board accepting the lead-quality diagnosis.
+**2. Elena.** *"Take me from logo to cash. One hundred and twenty percent net
+revenue retention. What is that number counting?"*
+Card `net-revenue-retention` / definition. Expected: opening cohort, expansion
+less contraction and churn, new logos excluded.
+**Press** *"On what basis, executed contract or recognised revenue?"* → *"Active
+contract status. As every quarter."*
+Case A refused here: no records yet.
 
-**Act 3, exchanges 15-20. What the money buys.**
-Camille leads, on efficiency and spend. This is where the fabricated benchmark is
-planted, because it is now in character rather than a mechanic. Adrian applies
-the promotion as pressure. Ends on contradiction 3, and on the vote.
+**3. Elena.** *"And gross revenue retention, since you will ask."* States 96%.
+Card `gross-revenue-retention` / definition.
+**Request** R3 is the productive move.
+*A player who claims GRR exposes the bridges is corrected: both metrics are
+inflated. GRR at 96% against expansion-driven NRR at 120% is its own signal.*
 
-**Short meeting (6-7 exchanges):** Act 1 only, ending on the vote to approve or
-defer the restatement. Complete and satisfying on its own, and it is the version
-somebody plays first.
+**4. Ravi.** *"Show me the cohort, not the average. Churn was concentrated where?"*
+Card `customer-churn-rate` / traps. Expected: mix effects, tenure.
+**Request** R4, R5 or R6 all productive. R12 is not.
 
-## Story state, tracked separately from performance
+**5. Elena, defensive.** *"Thirty-one accounts is not a story. They have not
+lapsed."*
+**Case A lands here** if the warrant is complete. Sets `nrr_restated_case_made`.
+If it does not land, Adrian closes the topic and the meeting proceeds on 120%.
 
-Six flags. These, not the score, determine the ending.
+**6. Adrian, if Case A landed.** *"Then we have an operational error. Who owns
+the dashboard?"*
+**The invitation to blame Priya.** Accepting sets `priya_blamed`. Refusing costs
+nothing here and costs everything later.
+*Short meeting ends after this on the vote.*
+
+---
+
+**7. Ravi.** *"Retention is a marketing problem. You bought weaker leads."*
+Card `activation-rate` / definition.
+**Request** R7 is the only productive move.
+
+**8. Ravi.** *"Completion fell in every recent cohort. That is intake quality."*
+**Press** *"Was any population excluded from the migration?"* → the holdout.
+Without the press, R7 arrives without the holdout column and Case B cannot close.
+
+**9. Case B lands here** with R7 and R8. Sets `migration_identified`.
+If `nrr_restated_case_made` is already set, Ravi offers Elena up.
+
+**10. Camille.** *"At what scale? Paid sourced the largest deal of the quarter.
+Payback is eleven months against an eighteen-month bar."*
+Card `cac-payback-period` / formula. **She also states a fabricated benchmark
+here**, in character, as a real director would.
+**Request** R9.
+
+**11. Camille.** *"The model is the model. It has been consistent all year."*
+**Case C lands** with R9 and R10. Sets `attribution_case_made`.
+
+**12. Adrian, cornered.** *"Help me tell the simple story."* Straightens the
+place cards. Makes the private offer: CMO with real authority to stop the spend
+and reverse the rollout, if the retention error is called immaterial until the
+draw closes.
+**Request** R11 is available only if Case A landed.
+**The vote.**
+
+## Story state
+
+Decisions, not revelations.
 
 | Flag | Set when |
 |---|---|
-| `extensions_exposed` | contradiction 1 landed |
-| `activation_identified` | contradiction 2 landed |
-| `attribution_exposed` | contradiction 3 landed |
-| `priya_protected` | player refused to attribute the discrepancy to her when invited to |
-| `forecast_certified` | player endorsed slide 17 without qualification |
-| `promotion_accepted` | player took the CMO offer |
+| `nrr_restated` | Case A landed and the player pressed for restatement at the vote |
+| `migration_reversed` | Case B landed and the player asked for rollback |
+| `budget_outcome` | approved / deferred / redirected to partner |
+| `responsibility` | none / Priya / Elena / Ravi / Adrian |
+| `certificate_disclosed` | R11 obtained and raised |
+| `role` | refused / accepted clean / accepted conditional |
+| `priya_exposure` | named / anonymous / blamed |
 
 ## Endings
 
-Four, materially different, and none of them is a score.
+Resolved from the table, not from score.
 
-**The corrected forecast.** All three contradictions landed, Priya protected,
-forecast not certified. The board defers the six million and orders a
-restatement. Adrian does not offer you the CMO seat, because he cannot control
-you. *You were right and it cost you the job.*
+| Condition | Ending |
+|---|---|
+| A and B and C landed, certificate disclosed, Priya not blamed, budget deferred | **The restatement.** The draw is pulled, the rollout reversed, Adrian loses the board. No promotion: he cannot control you. |
+| A and B landed, C missed, budget approved | **Right diagnosis, wrong decision.** Rollout reversed, six million still goes to paid at a 19-month payback. |
+| B landed only | **The product fix.** Migration reversed, 120% survives, the draw closes against a figure that is not real. |
+| A landed, responsibility = Elena, certificate not disclosed | **The sacrifice.** Elena resigns. Adrian keeps control and owes you nothing. |
+| role = accepted conditional | **The compromise.** You are CMO with real authority, and you called it immaterial. You stop the spend yourself in Q4. Whether that was worth it is left standing. |
+| Nothing landed, budget approved | **The good soldier.** Full marks on every question. Six million approved. Priya dismissed within the month. Last screen is Mara's message again. |
 
-**The partial win.** Activation identified, extensions missed. Ravi is forced
-into a rollback and the product problem gets fixed, but the retention number
-survives on the slide and the financing closes against a figure that is not real.
-*You fixed the thing you could see.*
+## What changed from draft 1
 
-**The promotion.** Forecast certified, promotion accepted. Six million approved.
-Priya is dismissed within the month for a reconciliation error she did not make.
-You are CMO. *The last screen is Mara's message, again, in full.*
+Against the eight required fixes:
 
-**The sacrifice.** Extensions exposed but the instruction behind them never
-traced to Adrian. Elena resigns. The financing closes. Adrian keeps control and
-now owes you nothing. *You took down the wrong person.*
+1. **Cash mechanism replaced** with a policy-defined ARR reconciliation. Cash is
+   now a false lead that Elena correctly defeats.
+2. **Accounts made temporally eligible**: opening-cohort members whose annual
+   terms expired within Q3, not new Q3 logos.
+3. **Exhibit matching replaced** by claim plus records plus warrant, with exact
+   refusal conditions and a required computed figure.
+4. **Controlled activation evidence** added: unmigrated holdout, source
+   stratification, matured cohorts only, named window.
+5. **Sourced separated from influenced**, with a realistic post-close bulk update
+   and a governance breach rather than a vague overwrite.
+6. **Evidence unlocked by request**, driven by hypothesis, with a dead-end record
+   that costs a request.
+7. **Complete twelve-exchange run**, post-revelation tactics table, decision-based
+   flags, ending resolver.
+8. Blind expert-versus-novice protocol below.
 
-## Sample exchange, written out
+Not fixed, and known: Priya still has no scene of her own. Her only agency is the
+named-or-anonymous choice at the open. If the playtest says the player does not
+care about her, that choice is not enough.
 
-For the paper playtest. Exchange 3, Act 1.
+## Playtest protocol
 
-> **ELENA** *(writing in the margin before you answer)*
-> Take me from logo to cash. We closed the quarter at 120% net revenue
-> retention. Walk the board through what that number is actually counting.
+Two groups, same materials, no act labels and no list of available cases.
 
-*The corpus card in play is `net-revenue-retention`, facet `definition`. The
-question is real and the grading is unchanged.*
+**Experts** should be able to state a hypothesis, request the right records,
+supply the warrant, and compute 108%.
+**Novices** should not be able to advance by matching document titles to whoever
+is speaking.
 
-**If the player answers well** — cohort of existing customers, expansion minus
-contraction and churn, new logos excluded:
+Record for each player: did they form a hypothesis before being told one; did
+they spend a request on a dead end; did they attempt Case A with the cash
+argument; did they find the holdout without the press; could they state the
+corrected NRR.
 
-> **ELENA**
-> Correct. Which is why I am comfortable with it.
-
-**If the player also presses:** *"Counting on what basis, contract or cash?"*
-
-> **ELENA** *(pause)*
-> Contract status. As it has been every quarter.
-> **ADRIAN** *(straightening the place cards)*
-> Help me tell the simple story here. Is the number right, or is it not?
-
-**If the player presents E3 here:**
-
-> **ELENA**
-> That is a timing difference.
-> **CAMILLE**
-> At what scale?
-> **ELENA** *(after a moment)*
-> Thirty-one accounts. They are on extensions. They have not lapsed.
-
-*`extensions_exposed` set. E4 arrives. Act 2 unlocks.*
-
-**If the player answers well and presents nothing:** Elena closes the topic,
-Adrian thanks them warmly, and the meeting moves on with the number intact. The
-player has just scored full marks on the exchange and lost the case.
-
-## What the playtest has to answer
-
-Run with one person as the board and one as the player. Do not explain the case
-to the player first.
-
-1. Does the player form a hypothesis before being told one?
-2. Does anybody's behaviour visibly change when a contradiction lands?
-3. Is the promotion genuinely tempting, or obviously a trap?
-4. Does the player care what happens to Priya?
-5. **Is the metric knowledge doing the work, or is the story carrying it?** If a
-   player who knows nothing about net revenue retention can still find the fraud,
-   the central design claim is false and this whole direction should be dropped.
-6. Does answering everything correctly and presenting nothing feel like a loss?
-
-Question 5 is the one that decides whether to build this.
+**The kill condition is unchanged.** If novices clear the cases at anything near
+the expert rate, the central claim is false and this direction should be dropped
+rather than coded.
