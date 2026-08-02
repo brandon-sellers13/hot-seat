@@ -102,10 +102,53 @@ A director is sometimes right, and the strong answer concedes and redirects. A d
 
 NEVER ask about support tickets, CSAT or service levels. Not this player's domain, and they let a weak answer sound engaged.`
 
-/** The per-call payload: the metric under test and the numbers that are real. */
-export const exchangeInput = ({ card, pack, ask }) =>
-  `THE PLAYER'S ASK THIS MEETING: ${ask}
+/**
+ * What kind of exchange this one is.
+ *
+ * Lifted from the four worked examples in the format brief rather than invented
+ * here, and rotated across a meeting so that twenty exchanges are not twenty
+ * benchmark challenges. Without this the model picks a shape itself, and left
+ * to itself it picks the same one, because a director objecting to a number is
+ * the most obvious way to build a board conversation.
+ *
+ * This sits in the per-call input rather than in the instructions, so it does
+ * not disturb the stable prefix.
+ */
+export const SHAPE_GUIDANCE = {
+  // This one took two measured attempts, and the first fix caused a second
+  // problem worth recording.
+  //
+  // The original wording landed 2 times in 5: the exchanges laid out both sets
+  // of figures without anybody taking a side, which reads as a briefing rather
+  // than a disagreement. Requiring each director to "state their position"
+  // fixed shape compliance to 5 of 5 and broke constraint 3, because stating a
+  // position about the ask IS naming the implication, which is the player's job.
+  //
+  // The disagreement has to be about WHAT THE FIGURES MEASURE, never about what
+  // to do. That is what the first worked example actually does: Elena and Ravi
+  // argue about whether revenue churn or logo churn is the real number, and
+  // neither of them says a word about the budget.
+  diagnosis: `Two named directors openly disagree, and both are correct, because the figures they are quoting measure different things. Each insists their own measure is the one that reflects reality, and neither backs down. Elena saying revenue churn is the real number while Ravi insists the logo count is, with both quoting accurately, is the model for this.
 
+They argue about WHICH MEASURE IS RIGHT, never about what the player should do. Neither director says what their figure means for the ask, or which way the decision should go. Working that out is the whole of the player's job here, and a director who does it for them has ended the exchange.`,
+
+  'director-wrong': `A director quotes something that does not apply here: a benchmark drawn from a different kind of company, or a figure taken at a different scale. Another director half-corrects them and stops short of saying what the right comparison would be, leaving that thread on the table. The question still asks the player to make their case.`,
+
+  'director-right': `The director raising the objection is right, and the pack supports them rather than the player. The question asks the player to justify the ask. Do not soften the objection to leave room for a counter — the strongest answer available here concedes it and moves the ask somewhere else, and that only works if the objection genuinely lands.`,
+
+  unsettled: `The question you land on cannot be settled from this board pack. One director proposes a cause, another proposes a rival cause, and nothing in the pack tells them apart: the sample is too small to carry the claim, or the cut that would decide it does not exist anywhere in the pack. Do not resolve it yourself and do not hint at which is true. The strong answer is that it cannot be told from this, naming the specific cut that would settle it.`
+}
+
+/** The per-call payload: the metric under test and the numbers that are real. */
+export const exchangeInput = ({ card, pack, ask, shape }) =>
+  `THE PLAYER'S ASK THIS MEETING: ${ask}
+${
+  SHAPE_GUIDANCE[shape]
+    ? `\nTHE SHAPE OF THIS EXCHANGE: ${SHAPE_GUIDANCE[shape]}
+
+Constraint 2 still governs whatever shape this is. The first line names the ask above, including the amount, before the shape does anything.\n`
+    : ''
+}
 === BOARD PACK, the only source of numbers ===
 ${JSON.stringify(pack)}
 

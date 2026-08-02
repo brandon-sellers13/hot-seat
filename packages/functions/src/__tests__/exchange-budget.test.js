@@ -90,7 +90,9 @@ describe('a meeting is the meter', () => {
 
   it('counts the exchange only after the model actually returned one', async () => {
     await handler(ok({ card, pack }))
-    expect(state.updates).toEqual([{ turn_count: 1 }])
+    // The dealt card rides along in the same write, so the session records what
+    // the meeting asked about rather than only the card it opened with.
+    expect(state.updates).toEqual([{ turn_count: 1, cards: ['net-revenue-retention'] }])
     expect(state.generated).toBe(1)
   })
 

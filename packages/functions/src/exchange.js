@@ -7,6 +7,7 @@ import {
   resolveApiKey,
   userClient
 } from './lib/budget.js'
+import { answerableFor, isShape, lengthFor, scenarioFor } from './lib/meeting.js'
 
 /**
  * POST /.netlify/functions/exchange
@@ -50,11 +51,16 @@ export const handler = async (event) => {
     return json(400, { error: 'Body was not valid JSON' })
   }
 
-  const { card, pack, ask, sessionId } = payload
+  const { card, pack, ask, sessionId, shape, length } = payload
   if (!card?.slug || !card?.facets) return json(400, { error: 'A metric card is required' })
   if (!Array.isArray(pack) || pack.length === 0) {
     return json(400, { error: 'A board pack is required' })
   }
+
+  // The shape reaches the prompt, so it is checked against the four known ones
+  // rather than passed through. An unrecognised shape means no shape guidance
+  // at all, which is the behaviour before shapes existed.
+  const chosenShape = isShape(shape) ? shape : null
 
   // The pack goes straight into the prompt, so its size is its cost. Without
   // this the caller decides how much each request costs us.
@@ -79,19 +85,27 @@ export const handler = async (event) => {
   // A player paying with their own key is not spending ours, so the caps do not
   // apply to them. Everyone else gets a session, and the session is the meter.
   let meeting = null
+  // How many exchanges this meeting runs to. Both modes sit at or below the
+  // spend ceiling, so this shortens a meeting and can never lengthen one.
+  let allowed = LIMITS.exchangesPerSession
   if (!bringYourOwn) {
     if (sessionId) {
       // Row-level security scopes this to the caller, so another player's
       // session is invisible rather than merely forbidden.
       const { data: existing } = await supabase
         .from('sessions')
-        .select('id, turn_count, ended_at')
+        .select('id, turn_count, ended_at, scenario, cards')
         .eq('id', sessionId)
         .maybeSingle()
 
       if (!existing) return json(404, { error: 'That meeting does not exist' })
       if (existing.ended_at) return json(409, { error: 'That meeting has ended' })
-      if (existing.turn_count >= LIMITS.exchangesPerSession) {
+      // The length was chosen when the meeting started and is read back off the
+      // session, not off this request. A short meeting that could be extended
+      // by asking for a long one on the second call would be a mode in name
+      // only, which is the shape of every guardrail that has failed here.
+      allowed = Math.min(LIMITS.exchangesPerSession, lengthFor(existing.scenario))
+      if (existing.turn_count >= allowed) {
         return json(429, {
           error: 'meeting_over',
           message: 'That is the last exchange of the meeting.'
@@ -117,9 +131,16 @@ export const handler = async (event) => {
         })
       }
 
+      const scenario = scenarioFor(length)
+      allowed = Math.min(LIMITS.exchangesPerSession, lengthFor(scenario))
+
       const { data: created, error: createError } = await supabase
         .from('sessions')
-        .insert({ user_id: auth.user.id, scenario: 'board-meeting', cards: [card.slug] })
+        // `cards` starts empty and is appended to after a generation succeeds,
+        // the same as `turn_count`. Listing the card at insert time would
+        // record a card the meeting never actually asked about if the provider
+        // call then failed.
+        .insert({ user_id: auth.user.id, scenario, cards: [] })
         .select('id, turn_count')
         .single()
 
@@ -128,7 +149,7 @@ export const handler = async (event) => {
       if (createError || !created) {
         return json(503, { error: 'session_failed', message: 'Could not start the meeting.' })
       }
-      meeting = created
+      meeting = { ...created, cards: [] }
     }
   }
 
@@ -141,17 +162,24 @@ export const handler = async (event) => {
       input: exchangeInput({
         card,
         pack,
-        ask: ask ?? 'More budget for acquisition next quarter.'
+        ask: ask ?? 'More budget for acquisition next quarter.',
+        shape: chosenShape
       }),
       schema: EXCHANGE_SCHEMA
     })
 
     // Counted after a real generation, never before, so a provider failure does
     // not consume a player's allowance.
+    //
+    // The dealt card is appended in the same write, so the session row records
+    // what the meeting actually asked about rather than only its first card.
     if (meeting) {
       await supabase
         .from('sessions')
-        .update({ turn_count: (meeting.turn_count ?? 0) + 1 })
+        .update({
+          turn_count: (meeting.turn_count ?? 0) + 1,
+          cards: [...(meeting.cards ?? []), card.slug]
+        })
         .eq('id', meeting.id)
     }
 
@@ -166,9 +194,19 @@ export const handler = async (event) => {
       ...exchange,
       lines,
       card_slug: card.slug,
+      shape: chosenShape,
+      // Whether the pack can settle this one, derived from the shape rather
+      // than left to the client to assert. It still travels through the client
+      // on its way to /grade, so this makes the honest path correct rather than
+      // making the dishonest one impossible.
+      answerable: answerableFor(chosenShape),
       session_id: meeting?.id ?? null,
       turn: (meeting?.turn_count ?? 0) + 1,
-      turns_remaining: meeting ? LIMITS.exchangesPerSession - (meeting.turn_count + 1) : null
+      // Counts generations, not answers. With the next exchange pre-generated
+      // while the player is still answering this one, these differ by one for
+      // most of a meeting.
+      turns_remaining: meeting ? allowed - (meeting.turn_count + 1) : null,
+      meeting_length: meeting ? allowed : null
     })
   } catch (error) {
     const retryable = error instanceof LlmError && error.retryable

@@ -8,6 +8,7 @@ import {
   exchangeGradeInput
 } from './lib/rubric.js'
 import { checkAnswerRate, resolveApiKey, userClient } from './lib/budget.js'
+import { CREDIBILITY_START, applyDrain, endingFor, lengthFor } from './lib/meeting.js'
 
 /**
  * POST /.netlify/functions/grade
@@ -56,6 +57,10 @@ export const handler = async (event) => {
   const {
     card, facet, question, answer, elapsedMs, source = 'daily',
     pack, answerable = true,
+    // Present when this answer is a turn in a meeting. The drain runs here
+    // rather than in the client because credibility decides when a meeting
+    // stops, and a stopping rule the client computes is a suggestion.
+    sessionId,
     // When the caller supplies what a strong answer contains, this is a board
     // exchange rather than a recall prompt, and it grades differently. The facet
     // grader is right for "what is NRR" and wrong for "is this leads or product":
@@ -79,6 +84,27 @@ export const handler = async (event) => {
 
   const { apiKey, bringYourOwn } = resolveApiKey(event.headers)
   if (!apiKey) return json(503, { error: 'No grading key is configured' })
+
+  // Looked up before the provider call, not after. An answer to a meeting that
+  // has already adjourned should be refused rather than graded and discarded,
+  // and refusing before we spend anything is the cheaper order to do it in.
+  //
+  // Row-level security scopes this, so another player's meeting reads as
+  // missing rather than as forbidden.
+  let meeting = null
+  if (sessionId) {
+    const { data } = await supabase
+      .from('sessions')
+      .select('id, credibility, scenario, ended_at')
+      .eq('id', sessionId)
+      .maybeSingle()
+
+    if (!data) return json(404, { error: 'no_meeting', message: 'That meeting does not exist' })
+    if (data.ended_at) {
+      return json(409, { error: 'meeting_over', message: 'That meeting has already ended.' })
+    }
+    meeting = data
+  }
 
   // A player supplying their own key is paying for it, so the caps do not apply.
   if (!bringYourOwn) {
@@ -130,13 +156,18 @@ export const handler = async (event) => {
 
   const box = nextBox(existing?.box ?? 1, verdict.verdict, hesitated)
 
-  await Promise.all([
+  const [{ error: attemptError }] = await Promise.all([
     supabase.from('attempts').insert({
       user_id: userId,
       card_slug: card.slug,
       facet,
       source,
       verdict: verdict.verdict,
+      // Both null outside a meeting. The stance is stored because the ending
+      // cannot tell a meeting won by conceding from one won by countering if
+      // all it has is the verdict, and those are different meetings.
+      session_id: meeting?.id ?? null,
+      stance: verdict.stance ?? null,
       rubric: verdict.rubric ?? {},
       missed: verdict.missed ?? [],
       answer_chars: answer.length,
@@ -159,9 +190,64 @@ export const handler = async (event) => {
     )
   ])
 
+  // ---------------------------------------------------------------------------
+  // The meeting moves here, off the verdict this function just produced.
+  //
+  // A meeting ends for two reasons and both are settled server-side: the player
+  // ran out of credibility, or they answered the last exchange of the length
+  // they chose. Either way `ended_at` gets stamped, and /exchange already
+  // refuses a session with `ended_at` set — so the meeting being over is a fact
+  // about the database rather than a state the client agrees to honour.
+  // ---------------------------------------------------------------------------
+  let state = null
+  if (meeting) {
+    const credibility = applyDrain(
+      meeting.credibility ?? CREDIBILITY_START,
+      verdict.verdict,
+      verdict.stance
+    )
+    const planned = lengthFor(meeting.scenario)
+
+    const { data: history } = await supabase
+      .from('attempts')
+      .select('verdict, stance')
+      .eq('session_id', meeting.id)
+
+    const attempts = history ?? []
+    // If the insert above failed then this answer is not in the history, and
+    // counting it in memory keeps the meeting the right length rather than
+    // silently giving the player a free extra turn.
+    if (attemptError) attempts.push({ verdict: verdict.verdict, stance: verdict.stance ?? null })
+
+    const over = credibility <= 0 || attempts.length >= planned
+    const ending = over ? endingFor({ credibility, attempts, planned }) : null
+
+    await supabase
+      .from('sessions')
+      .update({
+        credibility,
+        ...(ending ? { ended_at: new Date().toISOString(), outcome: ending.outcome } : {})
+      })
+      .eq('id', meeting.id)
+
+    state = {
+      credibility,
+      answered: attempts.length,
+      planned,
+      over,
+      // The recorded outcome and the ending the player is shown. Null until the
+      // meeting is actually over, so a client cannot render an ending early.
+      outcome: ending?.outcome ?? null,
+      decision: ending?.decision ?? null
+    }
+  }
+
   return json(200, {
     schema_version: VERDICT_SCHEMA_VERSION,
     verdict: verdict.verdict,
+    // Explicitly listed, like everything else in this object. That is exactly
+    // how `stance` went missing once already.
+    meeting: state,
     // The move the player made, separate from whether it worked. Added with the
     // exchange grader; the response was picking fields explicitly, so a new one
     // silently vanished between the model and the client.
