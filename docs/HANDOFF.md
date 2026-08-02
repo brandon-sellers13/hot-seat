@@ -1,7 +1,8 @@
 # Handoff — picking up at M4
 
-Written 2026-07-31 at the end of the session that built M1 through M3. Read this
-and `docs/plans/2026-07-31-002-feat-the-meeting-plan.md` and you have everything.
+Written at the end of the session that built M1 through M3 and fixed what review
+found in them. Read this and `docs/plans/2026-07-31-002-feat-the-meeting-plan.md`
+and you have everything. PR #1 is open and contains all of it.
 
 ---
 
@@ -22,9 +23,10 @@ card plus the company's pack.
 |---|---|
 | Repo | https://github.com/brandon-sellers13/hot-seat, branch `feat/the-meeting` |
 | Live | https://hotseat-brandonsellers.netlify.app |
-| Tests | 217 passing |
+| Tests | 233 passing |
 | Supabase | `uwqmkstcuwfzgkizcdjt`, schema + RLS applied, RLS verified 9/9 |
-| Functions live | `grade`, `interrogate`, `exchange` |
+| Functions live | `grade`, `exchange` (`interrogate` is dead code, still deployed) |
+| Verdict schema | `1.1.0` |
 
 **Verified in production, not assumed:**
 - An exchange generates from a card plus the pack in ~9s and quotes only figures
@@ -35,6 +37,9 @@ card plus the company's pack.
 - A hedge scores wrong. A deferral on an answerable question scores wrong.
 - Cross-tenant reads are refused at the database.
 - The global spend ceiling reads live data and blocks when set to zero.
+- **Generation is metered.** Attempting the abuse against production: an
+  oversized pack is refused with 413, unanswered generation is cut off after
+  exactly 20 with `meeting_over`, and the weekly cap binds after 10 meetings.
 
 **Built, not yet assembled into a meeting:** `/meeting` runs exactly one
 exchange, then offers another. That is M4's job.
@@ -113,28 +118,35 @@ guess.
 Assemble exchanges into a session. Mostly assembly rather than discovery, which
 is why it was left for a fresh start.
 
-**Scope:** six exchanges (short, ~8 min) or twenty (long, ~30 min). The opening
-ask carried through. Credibility that drains. An outcome that reflects what
-happened rather than a score.
+**Half of it already exists.** `/exchange` owns the session lifecycle, because
+that is what meters spend. It creates a `sessions` row on the first exchange and
+returns `session_id`, `turn`, and `turns_remaining`; pass `sessionId` back on
+every subsequent call or you start a new meeting and burn the weekly cap. Do not
+re-create session handling in the client.
 
-**Things to get right:**
+**What M4 actually has to build:**
 
-1. **The ask has to persist across exchanges.** Every exchange opens on what the
-   player came in for, so the meeting needs one ask that all twenty reference.
-   `ASKS` in `packages/app/src/lib/board.js`.
-2. **Card selection.** `ANSWERABLE` in `packages/app/src/lib/pack/arbor.js` lists
-   the metrics the pack can support. Do not draw outside it: asking about a
-   metric whose inputs are absent is what makes the generator invent them.
-3. **Avoid repeats within a meeting**, and prefer variety of stance — not twenty
-   benchmark challenges in a row.
-4. **Credibility.** Five pips, drains on wrong, drains harder on accepting a
-   figure you should have tested. Zero adjourns the meeting.
-5. **The outcome must reflect the ask.** Did the board approve, defer or
-   redirect it? That is the ending, not a percentage.
-6. **Generation latency is ~9s.** Pre-generate the next exchange while the player
-   is answering the current one, or the meeting stalls twenty times.
+1. **Loop the exchanges** using `turns_remaining` to know when the meeting is
+   over. Short meeting is 6, long is 20; `LIMITS.exchangesPerSession` is the
+   server-side ceiling at 20.
+2. **The ask persists.** Every exchange opens on what the player came in for, so
+   one ask threads through the whole meeting. `ASKS` in `packages/app/src/lib/board.js`.
+3. **Card selection.** `ANSWERABLE` in `packages/app/src/lib/pack/arbor.js` lists
+   what the pack can support. Do not draw outside it: asking about a metric whose
+   inputs are absent is what makes the generator invent them. Avoid repeats within
+   a meeting, and vary the stance — not twenty benchmark challenges in a row.
+4. **Credibility.** The `sessions` table already has a `credibility` column,
+   default 5, unused. Drain on wrong, drain harder on `stance: accepted`, which
+   is taking a figure you should have tested. Zero adjourns.
+5. **End the meeting properly:** set `ended_at` and `outcome` on the session.
+   `session_outcome` is an existing enum: `survived | wounded | burned | abandoned`.
+6. **The outcome reflects the ask.** Did the board approve, defer, or redirect
+   it? That is the ending, not a percentage.
+7. **Generation takes ~9 seconds.** Pre-generate the next exchange while the
+   player answers the current one, or the meeting stalls twenty times.
 
 **Not in M4:** narrative frame and company choice (M5), character art (M6).
+
 
 ---
 
@@ -237,6 +249,14 @@ across 40 exchanges and 90% overall pass.
 - [x] **Reset the weekly cap.** Was 2, now 10, sized against the measured cost
       rather than the old one.
 - [ ] **Fix prompt caching** by moving the pack into the cached prefix.
+- [ ] **`answerable` is client-controlled** and changes the grade: sending
+      `false` makes any refusal score correct. Single-player so cheating is
+      self-harm, but it makes the attempt log untrustworthy for the leak
+      analysis. Derive it server-side from `ANSWERABLE` instead.
+- [ ] **`facet: 'definition'` is hardcoded** in the meeting page's grade call
+      regardless of the metric in play, so Leitner rows accrue against the wrong
+      facet. Low impact while Leitner is being retired, but it is silently wrong.
+- [ ] **Delete `interrogate.js`.** Superseded by `exchange.js`, still deployed.
 - [ ] **Google OAuth client secret rotation.** Exposed in a chat transcript,
       deferred by choice. No spend attached, but the secret plus the client ID
       would let somebody stand up a sign-in page that looks like yours.
