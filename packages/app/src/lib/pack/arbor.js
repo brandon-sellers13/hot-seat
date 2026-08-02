@@ -59,6 +59,18 @@ export const SECTIONS = [
         ]
       },
       {
+        "title": "Board-approved targets, FY26",
+        "note": "The thresholds this board has agreed. A director quoting a bar is quoting one of these.",
+        "head": ["Measure","Target"],
+        "rows": [
+          ["Net revenue retention","110%"],
+          ["Gross revenue retention","92%"],
+          ["CAC payback, any channel","18 months or better"],
+          ["Gross margin","75% or better"],
+          ["Quarterly net new ARR","$1,400,000"]
+        ]
+      },
+      {
         "title": "ARR movement, Q3, existing customers as at 1 July",
         "note": "Movements against customers already on contract at the start of the quarter. New business is recorded separately.",
         "head": [
@@ -620,3 +632,24 @@ export const SECTIONS = [
     ]
   }
 ]
+
+/**
+ * Metrics this pack can genuinely answer.
+ *
+ * A question about a metric whose inputs are absent is what makes a generator
+ * invent them. Measured on 2026-07-31: with LTV:CAC in the pool the model
+ * fabricated a 24-month LTV horizon, because there is no LTV data here to reach
+ * for. Restricting the pool removed it. Any metric added here needs its inputs
+ * added to the pack in the same change.
+ */
+export const ANSWERABLE = new Set([
+  'net-revenue-retention',
+  'gross-revenue-retention',
+  'customer-churn-rate',
+  'saas-quick-ratio',
+  'cac-payback-period',
+  'customer-acquisition-cost',
+  'gross-margin',
+  'activation-rate',
+  'arpa'
+])

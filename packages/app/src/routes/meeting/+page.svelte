@@ -6,6 +6,7 @@
   import { BOARD, ASKS, speaker } from '$lib/board.js'
   import { loadCards } from '$lib/corpus.js'
   import { accessToken, ensureSession, isConfigured } from '$lib/auth.js'
+  import { ANSWERABLE } from '$lib/pack/arbor.js'
 
   /**
    * The walking skeleton: one exchange, end to end.
@@ -49,9 +50,10 @@
       const data = await loadCards()
       // Any card the pack can actually answer. The full meeting will schedule
       // these deliberately; the skeleton just needs one.
-      const pool = data.cards.filter((c) =>
-        ['net-revenue-retention','gross-revenue-retention','customer-churn-rate',
-         'saas-quick-ratio','cac-payback-period','customer-acquisition-cost'].includes(c.slug))
+      // Only metrics the pack can actually answer. LTV:CAC was dropped after
+      // testing: with no LTV inputs on the page the model invented a horizon,
+      // which is a pack gap rather than a prompt failure.
+      const pool = data.cards.filter((c) => ANSWERABLE.has(c.slug))
       card = pool[Math.floor(Math.random() * pool.length)]
       exchange = await post('exchange', { card, pack: SECTIONS, ask })
       shownAt = performance.now()

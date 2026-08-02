@@ -78,7 +78,14 @@ export const handler = async (event) => {
       schema: EXCHANGE_SCHEMA
     })
 
-    return json(200, { ...exchange, card_slug: card.slug })
+    // The model sometimes emits the closing question as a dialogue line AND as
+    // the question, so it renders twice. Seen on the first live generation.
+    // Dropped here rather than in the prompt because a structural defect should
+    // be impossible rather than discouraged.
+    const asked = exchange.question?.text?.trim()
+    const lines = (exchange.lines ?? []).filter((l) => l.text?.trim() !== asked)
+
+    return json(200, { ...exchange, lines, card_slug: card.slug })
   } catch (error) {
     const retryable = error instanceof LlmError && error.retryable
     return json(retryable ? 503 : 502, {

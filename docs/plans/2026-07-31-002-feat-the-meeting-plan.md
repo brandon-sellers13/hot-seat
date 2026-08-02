@@ -82,6 +82,43 @@ available is a failure. That distinction has to be real in code, not aspirationa
 they attribute it, did they identify the right decomposition. Only the strategy
 goes to the model, which keeps scoring variance out of the checkable part.
 
+## Cost, measured rather than modelled
+
+The unit of play changed from a question to a generated conversation, so the old
+$1,207 per thousand players figure is dead. Measured 2026-07-31 across a model
+and effort matrix, ten metrics per configuration:
+
+| Generation model | Per exchange | 20-exchange meeting | Median latency |
+|---|---|---|---|
+| Sol, low | $0.0605 | $1.21 | 21.5s |
+| Terra, medium | $0.0236 | $0.47 | 10.9s |
+| Terra, low | $0.0217 | $0.43 | 10.1s |
+| Luna, medium | $0.0033 | $0.07 | 16.9s |
+| **Luna, low** | **$0.0021** | **$0.04** | **8.1s** |
+
+**Luna at low is 29 times cheaper and two and a half times faster than Sol**, at
+the same measured format compliance: ten of ten on exactly-one-question, and
+slightly richer conversations than Terra at 4.7 lines against 3.9.
+
+Sol was the original default and had never been tested against anything. It put
+the annual model roughly nine times over target; Luna puts a long meeting at four
+cents. Grading stays on Luna at $0.00025 an answer, so a full long meeting costs
+about **$0.045 all in**, and the old ceiling stops being the binding constraint.
+
+Two findings worth keeping:
+
+**Prompt caching is not working.** `cached: 0` on every call despite a stable
+prefix, because the pack sits in `input` rather than in the cached `instructions`
+prefix. Worth fixing, but no longer urgent: input is a small share of a cost that
+is now four cents.
+
+**A pack gap looks exactly like a model failure.** Luna invented a 12-month
+payback threshold in four of ten exchanges. The cause was that the pack carried
+no board-approved targets, so the model imported a real-world convention. Adding
+a targets table took fabrications from four to one. The last one was LTV:CAC
+inventing an LTV horizon, fixed by removing a metric the pack cannot answer.
+**Before blaming the generator, check whether the pack can answer the question.**
+
 ## Units
 
 - [ ] **M1: The pack, in the app.** Port the prototype's source-organised pack
