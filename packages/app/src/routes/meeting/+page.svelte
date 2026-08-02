@@ -78,6 +78,8 @@
         facet: 'definition',
         question: `${exchange.lines.map((l) => `${speaker(l.speaker).name}: ${l.text}`).join('\n')}\n${speaker(exchange.question.speaker).name}: ${exchange.question.text}`,
         answer,
+        pack: SECTIONS,
+        reference: exchange.strong_answer,
         elapsedMs: readyAt ?? undefined,
         threshold: 12000,
         source: 'hot_seat'

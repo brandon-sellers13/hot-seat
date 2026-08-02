@@ -1,5 +1,12 @@
 import { LlmError, grade as gradeAnswer } from './lib/llm.js'
-import { VERDICT_SCHEMA, VERDICT_SCHEMA_VERSION, gradeInstructions, gradeInput } from './lib/rubric.js'
+import {
+  VERDICT_SCHEMA,
+  VERDICT_SCHEMA_VERSION,
+  gradeInstructions,
+  gradeInput,
+  exchangeGradeInstructions,
+  exchangeGradeInput
+} from './lib/rubric.js'
 import { checkAnswerRate, resolveApiKey, userClient } from './lib/budget.js'
 
 /**
@@ -46,7 +53,15 @@ export const handler = async (event) => {
     return json(400, { error: 'Body was not valid JSON' })
   }
 
-  const { card, facet, question, answer, elapsedMs, source = 'daily' } = payload
+  const {
+    card, facet, question, answer, elapsedMs, source = 'daily',
+    pack, answerable = true,
+    // When the caller supplies what a strong answer contains, this is a board
+    // exchange rather than a recall prompt, and it grades differently. The facet
+    // grader is right for "what is NRR" and wrong for "is this leads or product":
+    // the answer to the second is in no facet. Measured 3/9 against 8/9.
+    reference
+  } = payload
 
   if (!card?.slug || !facet || typeof answer !== 'string') {
     return json(400, { error: 'card, facet and answer are required' })
@@ -83,8 +98,12 @@ export const handler = async (event) => {
   try {
     verdict = await gradeAnswer({
       apiKey,
-      instructions: gradeInstructions({ facet }),
-      input: gradeInput({ card, facet, question, answer, elapsedMs }),
+      instructions: reference
+        ? exchangeGradeInstructions({ answerable })
+        : gradeInstructions({ facet, answerable }),
+      input: reference
+        ? exchangeGradeInput({ question, referenceAnswer: reference, answer, pack, card })
+        : gradeInput({ card, facet, question, answer, elapsedMs, pack }),
       schema: VERDICT_SCHEMA
     })
   } catch (error) {
@@ -143,6 +162,10 @@ export const handler = async (event) => {
   return json(200, {
     schema_version: VERDICT_SCHEMA_VERSION,
     verdict: verdict.verdict,
+    // The move the player made, separate from whether it worked. Added with the
+    // exchange grader; the response was picking fields explicitly, so a new one
+    // silently vanished between the model and the client.
+    stance: verdict.stance ?? null,
     missed: verdict.missed ?? [],
     tell: verdict.tell,
     rubric: verdict.rubric,
