@@ -18,7 +18,15 @@ const OPENAI_URL = 'https://api.openai.com/v1/responses'
 
 export const MODELS = {
   grade: process.env.GRADE_MODEL ?? 'gpt-5.6-luna',
-  interrogate: process.env.INTERROGATE_MODEL ?? 'gpt-5.6-sol'
+  // Luna, not Sol. Measured across a model and effort matrix on 2026-07-31:
+  // Luna at low costs $0.0021 an exchange against Sol's $0.0605, and returns in
+  // 8 seconds against 21. That is 29 times cheaper and two and a half times
+  // faster for the same measured format compliance.
+  //
+  // Sol was the original default and was never tested against anything. It put
+  // a twenty-exchange meeting at $1.21 and the annual model roughly nine times
+  // over target; on Luna the same meeting is four cents.
+  interrogate: process.env.INTERROGATE_MODEL ?? 'gpt-5.6-luna'
 }
 
 export const EFFORT = {

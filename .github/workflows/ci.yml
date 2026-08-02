@@ -26,6 +26,14 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          # SvelteKit's static env is resolved at build time, so the public
+          # values must exist for the bundle to compile. These are placeholders:
+          # CI only needs the build to succeed, and pointing a fork's CI at
+          # somebody else's Supabase project would be worse than useless.
+          PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+          PUBLIC_SUPABASE_ANON_KEY: placeholder-anon-key
+          PUBLIC_SITE_URL: http://localhost:5173
 
       # The corpus is the asset, and the extracted data is committed so that
       # consumers get it without running a build. Regenerating it here and
