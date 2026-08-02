@@ -22,6 +22,9 @@
   let error = $state(null)
   let answer = $state('')
   let ask = $state(ASKS[0])
+  // Carried between exchanges. Without it every exchange would open a new
+  // meeting and eat the weekly cap in four turns.
+  let sessionId = $state(null)
 
   // Navigation is the retrieval instrument. Which sources were opened, in what
   // order, and for how long separates someone who knew where to look from
@@ -43,9 +46,10 @@
     return payload
   }
 
-  const start = async () => {
+  const start = async (fresh = false) => {
     if (!isConfigured()) { error = 'Sign-in is not configured in this build.'; return }
     phase = 'loading'; error = null; verdict = null; answer = ''; nav = []; readyAt = null
+    if (fresh) sessionId = null
     try {
       const data = await loadCards()
       // Any card the pack can actually answer. The full meeting will schedule
@@ -55,7 +59,8 @@
       // which is a pack gap rather than a prompt failure.
       const pool = data.cards.filter((c) => ANSWERABLE.has(c.slug))
       card = pool[Math.floor(Math.random() * pool.length)]
-      exchange = await post('exchange', { card, pack: SECTIONS, ask })
+      exchange = await post('exchange', { card, pack: SECTIONS, ask, sessionId })
+      sessionId = exchange.session_id ?? sessionId
       shownAt = performance.now()
       phase = 'asking'
     } catch (caught) {
@@ -103,7 +108,7 @@
       <select bind:value={ask}>{#each ASKS as a (a)}<option value={a}>{a}</option>{/each}</select>
     </label>
     {#if error}<p class="err">{error}</p>{/if}
-    <button class="btn btn-primary" onclick={start}>Go in</button>
+    <button class="btn btn-primary" onclick={() => start(true)}>Go in</button>
   {:else}
     <p class="ask"><span class="eyebrow">Your ask</span> {ask}</p>
   {/if}

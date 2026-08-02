@@ -21,13 +21,31 @@ export const LIMITS = {
    * sessions are effectively the entire bill. Set generously enough that
    * ordinary play never touches it.
    */
-  sessionsPerWeek: Number(process.env.LIMIT_SESSIONS_PER_WEEK ?? 2),
+  sessionsPerWeek: Number(process.env.LIMIT_SESSIONS_PER_WEEK ?? 10),
   /**
    * The circuit breaker and the hard guarantee. Expressed in sessions per day
    * so it reads at a glance. Setting this to 0 is the documented kill switch:
    * the game degrades to reference mode rather than erroring.
    */
-  sessionsPerDayGlobal: Number(process.env.LIMIT_SESSIONS_PER_DAY_GLOBAL ?? 400)
+  sessionsPerDayGlobal: Number(process.env.LIMIT_SESSIONS_PER_DAY_GLOBAL ?? 400),
+  /**
+   * Exchanges per meeting, enforced server-side.
+   *
+   * This is what actually bounds spend, and it was missing. Generation is the
+   * expensive call and nothing counted it: the hourly limiter counts rows in
+   * `attempts`, which only /grade writes, so a caller who generated exchanges
+   * and never answered was never metered at all.
+   *
+   * Total generations per player per week is now sessionsPerWeek x this, which
+   * is the ceiling the plan always described and never enforced.
+   */
+  exchangesPerSession: Number(process.env.LIMIT_EXCHANGES_PER_SESSION ?? 20),
+  /**
+   * Largest board pack accepted, in bytes of JSON. The pack is sent by the
+   * client and goes straight into the prompt, so without this the per-call cost
+   * is set by the caller rather than by us. The demo pack is about 15KB.
+   */
+  packBytes: Number(process.env.LIMIT_PACK_BYTES ?? 65_536)
 }
 
 /** Distinguishes "you have hit a limit" from "something broke". */

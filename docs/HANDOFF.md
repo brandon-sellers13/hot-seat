@@ -184,6 +184,22 @@ netlify deploy --prod --no-build --skip-functions-cache \
 - Anonymous sign-ins and manual linking are both **off by default** and the game
   needs both.
 
+### Spend
+
+- **A rate limiter that counts the wrong table is not a rate limiter.**
+  `/exchange` originally checked `checkAnswerRate`, which counts rows in
+  `attempts` — a table only `/grade` writes. Generating exchanges and never
+  answering incremented nothing, so the expensive call was the unmetered one.
+  Fixed by making a meeting a row in `sessions`, which the two existing budget
+  controls have always counted and never saw.
+- **Anything the client sends that reaches the prompt is a cost the client
+  controls.** The pack had no size limit. Capped at 64KB.
+- **Count after the provider returns, never before**, or a failed call consumes
+  a player's allowance.
+- **If the meter cannot be written, refuse the request.** An unmeterable meeting
+  is the thing the meter exists to prevent, so a failed insert closes the
+  endpoint rather than waving it through.
+
 ### Grading and generation
 
 - **`grade.js` builds its response by picking fields explicitly.** A new field
@@ -218,7 +234,8 @@ across 40 exchanges and 90% overall pass.
 ## Open items
 
 - [ ] **M4, M5, M6** per the plan.
-- [ ] **Reset the weekly cap.** It was sized against a cost that no longer exists.
+- [x] **Reset the weekly cap.** Was 2, now 10, sized against the measured cost
+      rather than the old one.
 - [ ] **Fix prompt caching** by moving the pack into the cached prefix.
 - [ ] **Google OAuth client secret rotation.** Exposed in a chat transcript,
       deferred by choice. No spend attached, but the secret plus the client ID

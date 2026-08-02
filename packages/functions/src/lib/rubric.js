@@ -9,8 +9,12 @@
  * Verdict schema. Versioned from the first commit because once the repository
  * is public this is a contract with forkers, and a silent shape change breaks
  * their fork rather than ours.
+ *
+ * 1.1.0 adds `stance`, which is required. Anything parsing a 1.0.0 verdict still
+ * works, because every field it knew about is still there and still means the
+ * same thing.
  */
-export const VERDICT_SCHEMA_VERSION = '1.0.0'
+export const VERDICT_SCHEMA_VERSION = '1.1.0'
 
 export const VERDICT_SCHEMA = {
   name: 'verdict',
