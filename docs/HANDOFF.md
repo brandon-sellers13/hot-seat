@@ -1,7 +1,7 @@
-# Handoff — picking up at M4
+# Handoff — picking up at M5
 
-Written at the end of the session that built M1 through M3 and fixed what review
-found in them. Read this and `docs/plans/2026-07-31-002-feat-the-meeting-plan.md`
+Written at the end of the session that built M1 through M3, then extended when
+M4 landed. Read this and `docs/plans/2026-07-31-002-feat-the-meeting-plan.md`
 and you have everything. PR #1 is open and contains all of it.
 
 ---
@@ -23,14 +23,15 @@ card plus the company's pack.
 |---|---|
 | Repo | https://github.com/brandon-sellers13/hot-seat, branch `feat/the-meeting` |
 | Live | https://hotseat-brandonsellers.netlify.app |
-| Tests | 233 passing |
+| Tests | 293 passing |
 | Supabase | `uwqmkstcuwfzgkizcdjt`, schema + RLS applied, RLS verified 9/9 |
-| Functions live | `grade`, `exchange` (`interrogate` is dead code, still deployed) |
+| Functions live | `grade`, `exchange`, `adjourn` (`interrogate` is dead code, still deployed) |
 | Verdict schema | `1.1.0` |
 
 **Verified in production, not assumed:**
-- An exchange generates from a card plus the pack in ~9s and quotes only figures
-  that exist in the pack.
+- An exchange generates from a card plus the pack and quotes only figures that
+  exist in the pack. Latency was recorded as ~9s here; re-measured against
+  production on 2026-08-02 it is a 14.3s median. See M4 below.
 - The generator's own reference answer scores top tier against the grader. This
   is the check that the two halves of the loop agree; if it ever fails, they have
   drifted apart.
@@ -41,8 +42,13 @@ card plus the company's pack.
   oversized pack is refused with 413, unanswered generation is cut off after
   exactly 20 with `meeting_over`, and the weekly cap binds after 10 meetings.
 
-**Built, not yet assembled into a meeting:** `/meeting` runs exactly one
-exchange, then offers another. That is M4's job.
+**M4 is done and verified in production.** Session `ffd8319d`, a short meeting
+played end to end on the live site: credibility drained 5 → 4 → 3 → 2 → 0 across
+four exchanges, the last costing two pips for an `accepted` stance. The meeting
+stamped `ended_at` with outcome `burned` and decision `deferred`. A further
+generation returned 409, and a further grading attempt returned 409 before any
+provider call. A second session was walked out of, recorded `abandoned`, and
+refused a second adjourn.
 
 ---
 
@@ -113,37 +119,48 @@ guess.
 
 ---
 
-## M4: the meeting
+## M4: the meeting, as built
 
-Assemble exchanges into a session. Mostly assembly rather than discovery, which
-is why it was left for a fresh start.
+**The server owns everything that decides when a meeting stops.** `/grade` takes
+a `sessionId`, drains credibility off the verdict it just produced, and stamps
+`ended_at` at zero or on the last answer. `/exchange` already refuses a session
+with `ended_at` set, so the meeting being over is a fact about the database
+rather than a state the client agrees to honour. This is the whole shape of M4
+and it is why the drain does not live in the client.
 
-**Half of it already exists.** `/exchange` owns the session lifecycle, because
-that is what meters spend. It creates a `sessions` row on the first exchange and
-returns `session_id`, `turn`, and `turns_remaining`; pass `sessionId` back on
-every subsequent call or you start a new meeting and burn the weekly cap. Do not
-re-create session handling in the client.
+Adjourning at zero credibility is drama, not a spend control. The
+twenty-generation ceiling is the spend control and it binds either way.
 
-**What M4 actually has to build:**
+| Where | What |
+|---|---|
+| `packages/functions/src/lib/meeting.js` | Drain table, outcome, ask decision, lengths. Pure functions |
+| `/grade` | Drains, records `session_id` and `stance`, ends the meeting |
+| `/adjourn` | Ends a meeting walked out of. Refuses a second adjourn |
+| `/exchange` | Reads the length off the session, validates the shape |
+| `packages/app/src/lib/meeting.js` | The running order and the ending copy |
 
-1. **Loop the exchanges** using `turns_remaining` to know when the meeting is
-   over. Short meeting is 6, long is 20; `LIMITS.exchangesPerSession` is the
-   server-side ceiling at 20.
-2. **The ask persists.** Every exchange opens on what the player came in for, so
-   one ask threads through the whole meeting. `ASKS` in `packages/app/src/lib/board.js`.
-3. **Card selection.** `ANSWERABLE` in `packages/app/src/lib/pack/arbor.js` lists
-   what the pack can support. Do not draw outside it: asking about a metric whose
-   inputs are absent is what makes the generator invent them. Avoid repeats within
-   a meeting, and vary the stance — not twenty benchmark challenges in a row.
-4. **Credibility.** The `sessions` table already has a `credibility` column,
-   default 5, unused. Drain on wrong, drain harder on `stance: accepted`, which
-   is taking a figure you should have tested. Zero adjourns.
-5. **End the meeting properly:** set `ended_at` and `outcome` on the session.
-   `session_outcome` is an existing enum: `survived | wounded | burned | abandoned`.
-6. **The outcome reflects the ask.** Did the board approve, defer, or redirect
-   it? That is the ending, not a percentage.
-7. **Generation takes ~9 seconds.** Pre-generate the next exchange while the
-   player answers the current one, or the meeting stalls twenty times.
+**The drain**, starting at 5 and never restored: correct and partial cost
+nothing, wrong costs one, an `accepted` stance on anything short of correct
+costs two, `ungraded` costs nothing because that is our failure.
+
+**Meeting length rides on `sessions.scenario`** as `board-meeting:short` or
+`board-meeting:long`, read back off the session rather than off the request, so
+a short meeting cannot be extended by sending `long` on the second call.
+
+**The ending is the ask, not a score.** Approved when they held ground and were
+mostly right, redirected when a real share of their correct answers conceded or
+refused, deferred otherwise and always when burned. Redirected is a win: the
+third worked example is a meeting won by agreeing.
+
+**Question shapes** rotate across a meeting: `diagnosis`, `director-wrong`,
+`director-right`, `unsettled`. Validated server-side against those four, and an
+unrecognised one is dropped rather than passed to the model. `answerable` is
+derived from the shape, so refusing an unsettled question finally scores correct.
+
+**Generation is slower than this document used to say.** Measured in production
+on 2026-08-02, four calls: **14.3s median**, 13.4s to 14.9s. The eval measures
+10.4s to 11.3s calling the provider directly, so three to four seconds of it is
+the serverless hop. Pre-generation is worth more than the old 9s figure implied.
 
 **Not in M4:** narrative frame and company choice (M5), character art (M6).
 
@@ -227,13 +244,31 @@ netlify deploy --prod --no-build --skip-functions-cache \
   prefix. Worth fixing; not urgent while a meeting costs four cents.
 - **The model sometimes emits the closing question as a dialogue line as well.**
   Stripped server-side in `exchange.js` rather than discouraged in the prompt.
+- **An eval measuring the wrong sources is worse than no eval.** The 2026-08-02
+  harness scored 0% on its first run against a generator that was mostly
+  behaving, because it was given the board pack alone and told anything absent
+  from it was invented. That flagged the player's own ask, which constraint 2
+  requires the first line to name, and card-sourced benchmarks, which the second
+  worked example is built out of. Its second version inverted the
+  interpret-aloud check and reported the format working as a failure. Both read
+  as rigorous. **A new eval needs a control arm**, or a bad number cannot be
+  told apart from a strict grader.
+
+### Testing a guard
+
+- **A test asserting a write happened does not test that anything is enforced.**
+  The M4 guard tests run `/grade` and `/exchange` against one shared in-memory
+  database (`__tests__/helpers/fake-supabase.js`), so credibility written by one
+  is read back by the other. A mock returning canned rows would pass even if the
+  refusal never fired, which is how this project shipped two controls that read
+  as enforced and enforced nothing.
 
 ---
 
 ## Verify anything with these
 
 ```bash
-npm test                                              # 217 tests
+npm test                                              # 293 tests
 npm run extract --workspace @hot-seat/corpus          # regenerate cards.json
 ```
 
@@ -245,17 +280,29 @@ across 40 exchanges and 90% overall pass.
 
 ## Open items
 
-- [ ] **M4, M5, M6** per the plan.
+- [x] **M4.** Built, deployed, verified in production 2026-08-02.
+- [ ] **M5 and M6** per the plan.
+- [ ] **The navigation log is collected and thrown away.** The meeting page
+      records which pack sections were opened and in what order, and nothing
+      persists it. The plan calls this the instrument that shows whether the
+      pack is leaking, and it is the most valuable missing measurement in the
+      game. Needs a column and a write.
+- [ ] **Shaped exchanges interpret aloud more often than unshaped ones**, 9 of
+      20 against 6 of 20, measured 2026-08-02. Giving a director a role makes
+      them likelier to say what their figure means, which is the player's job.
+      Two attempts at fixing it moved the number by less than run-to-run noise.
+- [ ] **A closed tab leaves a meeting open forever.** `abandoned` is recorded
+      only when the player leaves in a way that reaches `/adjourn`.
 - [x] **Reset the weekly cap.** Was 2, now 10, sized against the measured cost
       rather than the old one.
 - [ ] **Fix prompt caching** by moving the pack into the cached prefix.
-- [ ] **`answerable` is client-controlled** and changes the grade: sending
-      `false` makes any refusal score correct. Single-player so cheating is
-      self-harm, but it makes the attempt log untrustworthy for the leak
-      analysis. Derive it server-side from `ANSWERABLE` instead.
-- [ ] **`facet: 'definition'` is hardcoded** in the meeting page's grade call
-      regardless of the metric in play, so Leitner rows accrue against the wrong
-      facet. Low impact while Leitner is being retired, but it is silently wrong.
+- [ ] **`answerable` is derived from the shape but still relayed by the client**
+      on its way to `/grade`. The honest path is now correct, where before every
+      unsettled question was graded as though the pack could settle it. A caller
+      who wants to mark their own refusals correct still can. Closing it needs
+      per-exchange server state.
+- [x] **`facet: 'definition'` was hardcoded** in the meeting page's grade call.
+      Now `exchange`. M4 turned one wrong Leitner row into twenty a meeting.
 - [ ] **Delete `interrogate.js`.** Superseded by `exchange.js`, still deployed.
 - [ ] **Google OAuth client secret rotation.** Exposed in a chat transcript,
       deferred by choice. No spend attached, but the secret plus the client ID
